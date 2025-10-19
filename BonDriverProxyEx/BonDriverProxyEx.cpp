@@ -295,6 +295,8 @@ cProxyServerEx::cProxyServerEx() : m_Error(TRUE, FALSE)
 	m_pDriversMapKey = NULL;
 	m_iDriverNo = -1;
 	m_iDriverUseOrder = 0;
+	m_fifoSend.SetAbortEvent(m_Error);
+	m_fifoRecv.SetAbortEvent(m_Error);
 }
 
 cProxyServerEx::~cProxyServerEx()

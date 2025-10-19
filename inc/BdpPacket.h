@@ -113,10 +113,17 @@ class cPacketFifo : protected std::queue<cPacketHolder *> {
 	const size_t m_fifoSize;
 	cCriticalSection m_Lock;
 	cEvent m_Event;
-	cPacketFifo &operator=(const cPacketFifo &);	// shut up C4512
+	cEvent m_SpaceEvent;
+	HANDLE m_hAbort;
+	cPacketFifo &operator=(const cPacketFifo &);    // shut up C4512
 
 public:
-	cPacketFifo() : m_fifoSize(g_PacketFifoSize), m_Event(TRUE, FALSE){}
+	cPacketFifo()
+		: m_fifoSize(g_PacketFifoSize)
+		, m_Event(TRUE, FALSE)
+		, m_SpaceEvent(TRUE, TRUE)
+		, m_hAbort(NULL)
+	{}
 	~cPacketFifo()
 	{
 		LOCK(m_Lock);
@@ -128,23 +135,57 @@ public:
 		}
 	}
 
+	void SetAbortEvent(HANDLE h)
+	{
+		m_hAbort = h;
+	}
+
 	void Push(cPacketHolder *p)
 	{
-		LOCK(m_Lock);
-		if (size() >= m_fifoSize)
+		if ((m_fifoSize == 0) || !p->IsTS())
 		{
+			LOCK(m_Lock);
+			push(p);
+			m_Event.Set();
+			if ((m_fifoSize != 0) && (size() >= m_fifoSize))
+				m_SpaceEvent.Reset();
+			return;
+		}
+
+		for (;;)
+		{
+			{
+				LOCK(m_Lock);
+				if (size() < m_fifoSize)
+				{
+					push(p);
+					m_Event.Set();
+					if (size() >= m_fifoSize)
+						m_SpaceEvent.Reset();
+					return;
+				}
 #if _DEBUG
-			_RPT1(_CRT_WARN, "Packet Queue OVERFLOW : size[%d]\n", size());
+				_RPT1(_CRT_WARN, "Packet Queue OVERFLOW : size[%d]\n", size());
 #endif
-			// TS‚Ìê‡‚Ì‚Ýƒhƒƒbƒv
-			if (p->IsTS())
+			}
+
+			HANDLE handles[2];
+			DWORD waitCount = 0;
+			if (m_hAbort != NULL)
+				handles[waitCount++] = m_hAbort;
+			handles[waitCount++] = (HANDLE)m_SpaceEvent;
+			DWORD dw = ::WaitForMultipleObjects(waitCount, handles, FALSE, INFINITE);
+			if (dw == WAIT_FAILED)
+			{
+				delete p;
+				return;
+			}
+			if ((m_hAbort != NULL) && (dw == WAIT_OBJECT_0))
 			{
 				delete p;
 				return;
 			}
 		}
-		push(p);
-		m_Event.Set();
 	}
 
 	void Pop(cPacketHolder **p)
@@ -156,9 +197,15 @@ public:
 			pop();
 			if (empty())
 				m_Event.Reset();
+			if ((m_fifoSize != 0) && (size() < m_fifoSize))
+				m_SpaceEvent.Set();
 		}
 		else
+		{
 			m_Event.Reset();
+			if (m_fifoSize != 0)
+				m_SpaceEvent.Set();
+		}
 	}
 
 	HANDLE GetEventHandle()
