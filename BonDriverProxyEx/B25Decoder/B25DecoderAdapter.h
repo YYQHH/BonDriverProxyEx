@@ -1,4 +1,4 @@
-#ifndef __B25_DECODER_ADAPTER_H__
+ï»¿#ifndef __B25_DECODER_ADAPTER_H__
 #define __B25_DECODER_ADAPTER_H__
 
 #ifdef USE_B25_DECODER_DLL
@@ -6,8 +6,8 @@
 #include <windows.h>
 
 /////////////////////////////////////////////////////////////////////////////
-// IB25DecoderƒCƒ“ƒ^[ƒtƒFƒCƒX‚ÌŠO•”DLL‚ð
-// B25DecoderƒNƒ‰ƒX‚É“K‡‚³‚¹‚éƒAƒ_ƒvƒ^ƒNƒ‰ƒX
+// IB25Decoderã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹ã®å¤–éƒ¨DLLã‚’
+// B25Decoderã‚¯ãƒ©ã‚¹ã«é©åˆã•ã›ã‚‹ã‚¢ãƒ€ãƒ—ã‚¿ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class B25DecoderAdapter {

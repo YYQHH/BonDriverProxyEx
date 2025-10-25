@@ -1,41 +1,41 @@
-#ifndef __CWINSERVICE_H__
+ï»¿#ifndef __CWINSERVICE_H__
 #define __CWINSERVICE_H__
 
-// SERVICE_WIN32_OWN_PROCESS‚ÌƒT[ƒrƒX‚ð‘€ì‚·‚éˆ×‚Ìƒ†[ƒeƒBƒŠƒeƒBƒNƒ‰ƒX
+// SERVICE_WIN32_OWN_PROCESSã®ã‚µãƒ¼ãƒ“ã‚¹ã‚’æ“ä½œã™ã‚‹ç‚ºã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ã‚¯ãƒ©ã‚¹
 class CWinService
 {
 	static CWinService This;
 	static SERVICE_STATUS serviceStatus;
 	static SERVICE_STATUS_HANDLE serviceStatusHandle;
-	// I—¹ƒCƒxƒ“ƒg
+	// çµ‚äº†ã‚¤ãƒ™ãƒ³ãƒˆ
 	static HANDLE hServerStopEvent;
-	// ƒT[ƒrƒX–¼Ì
+	// ã‚µãƒ¼ãƒ“ã‚¹åç§°
 	TCHAR serviceName[BUFSIZ];
-	// ƒT[ƒrƒXŽÀ‘ÌƒpƒX
+	// ã‚µãƒ¼ãƒ“ã‚¹å®Ÿä½“ãƒ‘ã‚¹
 	TCHAR serviceExePath[BUFSIZ];
 
 	CWinService();
 	virtual ~CWinService();
 
-	// ƒT[ƒrƒXƒRƒ“ƒgƒ[ƒ‹ƒnƒ“ƒhƒ‰
+	// ã‚µãƒ¼ãƒ“ã‚¹ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ãƒãƒ³ãƒ‰ãƒ©
 	static DWORD WINAPI ServiceCtrlHandler(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext);
 
 public:
 	static CWinService *getInstance(){ return &This; };
 
-	// ƒCƒ“ƒXƒg[ƒ‹‚ÆƒAƒ“ƒCƒ“ƒXƒg[ƒ‹
+	// ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã¨ã‚¢ãƒ³ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
 	BOOL Install();
 	BOOL Remove();
 
-	// ‹N“®E’âŽ~EÄ‹N“®
+	// èµ·å‹•ãƒ»åœæ­¢ãƒ»å†èµ·å‹•
 	BOOL Start();
 	BOOL Stop();
 	BOOL Restart();
 
-	// ŽÀs
+	// å®Ÿè¡Œ
 	BOOL Run(LPSERVICE_MAIN_FUNCTIONW lpServiceProc);
 
-	// ƒT[ƒrƒXƒƒCƒ“‚©‚çŒÄ‚Ño‚·Žè‘±‚«ŠÖ”
+	// ã‚µãƒ¼ãƒ“ã‚¹ãƒ¡ã‚¤ãƒ³ã‹ã‚‰å‘¼ã³å‡ºã™æ‰‹ç¶šãé–¢æ•°
 	BOOL RegisterService();
 	void ServiceRunning();
 	void ServiceStopped();

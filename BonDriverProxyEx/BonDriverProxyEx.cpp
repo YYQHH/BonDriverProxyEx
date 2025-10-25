@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+ï»¿#define _CRT_SECURE_NO_WARNINGS
 #include "BonDriverProxyEx.h"
 
 #if _DEBUG
@@ -231,11 +231,11 @@ static int Init(HMODULE hModule)
 #if defined(HAVE_UI) || defined(BUILD_AS_SERVICE)
 static void ShutdownInstances()
 {
-	// ƒVƒƒƒbƒgƒ_ƒEƒ“ƒCƒxƒ“ƒgƒgƒŠƒK
+	// ã‚·ãƒ£ãƒƒãƒˆãƒ€ã‚¦ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆãƒˆãƒªã‚¬
 	if (!g_ShutdownEvent.IsSet())
 		g_ShutdownEvent.Set();
 
-	// ‚Ü‚¸‘Ò‚¿ó‚¯ƒXƒŒƒbƒh‚ÌI—¹‚ğ‘Ò‚Â
+	// ã¾ãšå¾…ã¡å—ã‘ã‚¹ãƒ¬ãƒƒãƒ‰ã®çµ‚äº†ã‚’å¾…ã¤
 	g_Lock.Enter();
 	if (g_hListenThread != NULL)
 	{
@@ -245,11 +245,11 @@ static void ShutdownInstances()
 	}
 	g_Lock.Leave();
 
-	// ‘SƒNƒ‰ƒCƒAƒ“ƒgƒCƒ“ƒXƒ^ƒ“ƒX‚ÌI—¹‚ğ‘Ò‚Â
+	// å…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®çµ‚äº†ã‚’å¾…ã¤
 	for (;;)
 	{
-		// g_InstanceList‚Ì”Šm”F‚Å‚í‚´‚í‚´ƒƒbƒN‚µ‚Ä‚é‚Ì‚ÍAcProxyServerExƒCƒ“ƒXƒ^ƒ“ƒX‚ª
-		// "ƒŠƒXƒg‚©‚ç‚Ííœ‚³‚ê‚Ä‚¢‚Ä‚àƒfƒXƒgƒ‰ƒNƒ^‚ªI—¹‚µ‚Ä‚¢‚È‚¢"ó‘Ô‚ğ”rœ‚·‚éˆ×
+		// g_InstanceListã®æ•°ç¢ºèªã§ã‚ã–ã‚ã–ãƒ­ãƒƒã‚¯ã—ã¦ã‚‹ã®ã¯ã€cProxyServerExã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒ
+		// "ãƒªã‚¹ãƒˆã‹ã‚‰ã¯å‰Šé™¤ã•ã‚Œã¦ã„ã¦ã‚‚ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãŒçµ‚äº†ã—ã¦ã„ãªã„"çŠ¶æ…‹ã‚’æ’é™¤ã™ã‚‹ç‚º
 		g_Lock.Enter();
 		size_t num = g_InstanceList.size();
 		g_Lock.Leave();
@@ -258,7 +258,7 @@ static void ShutdownInstances()
 		Sleep(10);
 	}
 
-	// ƒVƒƒƒbƒgƒ_ƒEƒ“ƒCƒxƒ“ƒgƒNƒŠƒA
+	// ã‚·ãƒ£ãƒƒãƒˆãƒ€ã‚¦ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã‚¯ãƒªã‚¢
 	g_ShutdownEvent.Reset();
 }
 #endif
@@ -351,10 +351,10 @@ DWORD WINAPI cProxyServerEx::Reception(LPVOID pv)
 {
 	cProxyServerEx *pProxy = static_cast<cProxyServerEx *>(pv);
 
-	// “à•”‚ÅCOM‚ğg—p‚µ‚Ä‚¢‚éBonDriver‚É‘Î‚·‚é‘Îô
+	// å†…éƒ¨ã§COMã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹BonDriverã«å¯¾ã™ã‚‹å¯¾ç­–
 	HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE | COINIT_SPEED_OVER_MEMORY);
 
-	// Ú‘±ƒNƒ‰ƒCƒAƒ“ƒg‚ª‚¢‚éŠÔ‚ÍƒXƒŠ[ƒv—}~
+	// æ¥ç¶šã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãŒã„ã‚‹é–“ã¯ã‚¹ãƒªãƒ¼ãƒ—æŠ‘æ­¢
 	EXECUTION_STATE es = ::SetThreadExecutionState(g_ThreadExecutionState);
 
 	DWORD ret = pProxy->Process();
@@ -401,9 +401,9 @@ DWORD cProxyServerEx::Process()
 
 		case WAIT_OBJECT_0 + 1:
 		{
-			// ƒRƒ}ƒ“ƒhˆ—‚Ì‘S‘Ì‚ğƒƒbƒN‚·‚é‚Ì‚ÅABonDriver_Proxy‚ğƒ[ƒh‚µ‚Ä©•ª©g‚É
-			// Ú‘±‚³‚¹‚é‚ÆƒfƒbƒhƒƒbƒN‚·‚é
-			// ‚µ‚©‚µ‚»‚¤‚µ‚È‚¯‚ê‚Î¢‚éó‹µ‚ÆŒ¾‚¤‚Ì‚Í‘½•ª–³‚¢‚Æv‚¤‚Ì‚ÅA‚±‚ê‚Íd—l‚ÆŒ¾‚¤–‚Å
+			// ã‚³ãƒãƒ³ãƒ‰å‡¦ç†ã®å…¨ä½“ã‚’ãƒ­ãƒƒã‚¯ã™ã‚‹ã®ã§ã€BonDriver_Proxyã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¦è‡ªåˆ†è‡ªèº«ã«
+			// æ¥ç¶šã•ã›ã‚‹ã¨ãƒ‡ãƒƒãƒ‰ãƒ­ãƒƒã‚¯ã™ã‚‹
+			// ã—ã‹ã—ãã†ã—ãªã‘ã‚Œã°å›°ã‚‹çŠ¶æ³ã¨è¨€ã†ã®ã¯å¤šåˆ†ç„¡ã„ã¨æ€ã†ã®ã§ã€ã“ã‚Œã¯ä»•æ§˜ã¨è¨€ã†äº‹ã§
 			LOCK(g_Lock);
 			cPacketHolder *pPh;
 			m_fifoRecv.Pop(&pPh);
@@ -457,12 +457,12 @@ DWORD cProxyServerEx::Process()
 					char *p;
 					if ((p = ::strrchr((char *)(pPh->m_pPacket->payload), ':')) != NULL)
 					{
-						if (::strcmp(p, ":desc") == 0)	// ~‡
+						if (::strcmp(p, ":desc") == 0)	// é™é †
 						{
 							*p = '\0';
 							m_iDriverUseOrder = 1;
 						}
-						else if (::strcmp(p, ":asc") == 0)	// ¸‡
+						else if (::strcmp(p, ":asc") == 0)	// æ˜‡é †
 							*p = '\0';
 					}
 					BOOL b = SelectBonDriver((LPCSTR)(pPh->m_pPacket->payload), 0);
@@ -486,15 +486,15 @@ DWORD cProxyServerEx::Process()
 						{
 							if (pInstance->m_pIBon != NULL)
 							{
-								bFind = TRUE;	// ‚±‚±‚É—ˆ‚é‚Ì‚Í‚©‚È‚è‚ÌƒŒƒAƒP[ƒX‚ÌƒnƒY
+								bFind = TRUE;	// ã“ã“ã«æ¥ã‚‹ã®ã¯ã‹ãªã‚Šã®ãƒ¬ã‚¢ã‚±ãƒ¼ã‚¹ã®ãƒã‚º
 								m_pIBon = pInstance->m_pIBon;
 								m_pIBon2 = pInstance->m_pIBon2;
 								m_pIBon3 = pInstance->m_pIBon3;
 								break;
 							}
-							// ‚±‚±‚É—ˆ‚é‚Ì‚Íã‚æ‚èX‚ÉƒŒƒAƒP[ƒX
-							// ˆê‰ƒŠƒXƒg‚ÌÅŒã‚Ü‚ÅŒŸõ‚µ‚Ä‚İ‚ÄA‚»‚ê‚Å‚àŒ©‚Â‚©‚ç‚È‚©‚Á‚½‚ç
-							// CreateBonDriver()‚ğ‚â‚ç‚¹‚Ä‚İ‚é
+							// ã“ã“ã«æ¥ã‚‹ã®ã¯ä¸Šã‚ˆã‚Šæ›´ã«ãƒ¬ã‚¢ã‚±ãƒ¼ã‚¹
+							// ä¸€å¿œãƒªã‚¹ãƒˆã®æœ€å¾Œã¾ã§æ¤œç´¢ã—ã¦ã¿ã¦ã€ãã‚Œã§ã‚‚è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã‚‰
+							// CreateBonDriver()ã‚’ã‚„ã‚‰ã›ã¦ã¿ã‚‹
 						}
 					}
 					if (!bFind)
@@ -646,17 +646,17 @@ DWORD cProxyServerEx::Process()
 					DWORD dwReqChannel = ::ntohl(*(DWORD *)&(pPh->m_pPacket->payload[sizeof(DWORD)]));
 					if ((dwReqSpace == m_dwSpace) && (dwReqChannel == m_dwChannel))
 					{
-						// Šù‚ÉƒŠƒNƒGƒXƒg‚³‚ê‚½ƒ`ƒƒƒ“ƒlƒ‹‚ğ‘I‹ÇÏ‚İ
+						// æ—¢ã«ãƒªã‚¯ã‚¨ã‚¹ãƒˆã•ã‚ŒãŸãƒãƒ£ãƒ³ãƒãƒ«ã‚’é¸å±€æ¸ˆã¿
 #if _DEBUG && DETAILLOG2
 						_RPT2(_CRT_WARN, "** already tuned! ** : m_dwSpace[%d] / m_dwChannel[%d]\n", dwReqSpace, dwReqChannel);
 #endif
-						// •K‚¸true‚ÌƒnƒY‚¾‚¯‚ÇAˆê‰
+						// å¿…ãštrueã®ãƒã‚ºã ã‘ã©ã€ä¸€å¿œ
 						if (m_hTsRead)
 						{
-							// ‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ª—v‹‚µ‚Ä‚¢‚é—Dæ“x‚ª255‚Å‚ ‚Á‚½ê‡‚É
+							// ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒè¦æ±‚ã—ã¦ã„ã‚‹å„ªå…ˆåº¦ãŒ255ã§ã‚ã£ãŸå ´åˆã«
 							if (bChannelLock == 0xff)
 							{
-								// Œ»İ‚Ì”zMƒŠƒXƒg‚É‚Í—Dæ“x255‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ªŠù‚É‚¢‚é‚©H
+								// ç¾åœ¨ã®é…ä¿¡ãƒªã‚¹ãƒˆã«ã¯å„ªå…ˆåº¦255ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒæ—¢ã«ã„ã‚‹ã‹ï¼Ÿ
 								BOOL bFind = FALSE;
 								m_pTsReaderArg->TsLock.Enter();
 								for (auto pReceiver : m_pTsReaderArg->TsReceiversList)
@@ -670,9 +670,9 @@ DWORD cProxyServerEx::Process()
 								m_pTsReaderArg->TsLock.Leave();
 								if (bFind)
 								{
-									// ‚¢‚½ê‡‚ÍA‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ì—Dæ“x‚ğb’è“I‚É254‚É‚·‚é
+									// ã„ãŸå ´åˆã¯ã€ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å„ªå…ˆåº¦ã‚’æš«å®šçš„ã«254ã«ã™ã‚‹
 									bChannelLock = 0xfe;
-									// ”r‘¼Œ æ“¾‘Ò‚¿ƒŠƒXƒg‚É‚Ü‚¾©g‚ªŠÜ‚Ü‚ê‚Ä‚¢‚È‚¯‚ê‚Î’Ç‰Á
+									// æ’ä»–æ¨©å–å¾—å¾…ã¡ãƒªã‚¹ãƒˆã«ã¾ã è‡ªèº«ãŒå«ã¾ã‚Œã¦ã„ãªã‘ã‚Œã°è¿½åŠ 
 									bFind = FALSE;
 									for (auto pPriv : m_pTsReaderArg->WaitExclusivePrivList)
 									{
@@ -704,17 +704,17 @@ DWORD cProxyServerEx::Process()
 						{
 							if (pInstance1 == this)
 								continue;
-							// ‚Ğ‚Æ‚Ü‚¸Œ»İ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ª‹¤—L‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğŠm”F‚µ‚Ä‚¨‚­
+							// ã²ã¨ã¾ãšç¾åœ¨ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒå…±æœ‰ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’ç¢ºèªã—ã¦ãŠã
 							if ((m_pIBon != NULL) && (m_pIBon == pInstance1->m_pIBon))
 								bShared = TRUE;
 
-							// ‘ÎÛBonDriverŒQ‚Ì’†‚Åƒ`ƒ…[ƒi‚ğƒI[ƒvƒ“‚µ‚Ä‚¢‚é‚à‚Ì
+							// å¯¾è±¡BonDriverç¾¤ã®ä¸­ã§ãƒãƒ¥ãƒ¼ãƒŠã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã—ã¦ã„ã‚‹ã‚‚ã®
 							if (m_pDriversMapKey == pInstance1->m_pDriversMapKey && pInstance1->m_pIBon != NULL && pInstance1->m_bTunerOpen)
 							{
-								// ‚©‚ÂƒNƒ‰ƒCƒAƒ“ƒg‚©‚ç‚Ì—v‹‚Æ“¯ˆêƒ`ƒƒƒ“ƒlƒ‹‚ğ‘I‘ğ‚µ‚Ä‚¢‚é‚à‚Ì
+								// ã‹ã¤ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‹ã‚‰ã®è¦æ±‚ã¨åŒä¸€ãƒãƒ£ãƒ³ãƒãƒ«ã‚’é¸æŠã—ã¦ã„ã‚‹ã‚‚ã®
 								if (pInstance1->m_dwSpace == dwReqSpace && pInstance1->m_dwChannel == dwReqChannel)
 								{
-									// ¡ƒNƒ‰ƒCƒAƒ“ƒg‚ªƒI[ƒvƒ“‚µ‚Ä‚¢‚éƒ`ƒ…[ƒi‚ÉŠÖ‚µ‚Ä
+									// ä»Šã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãŒã‚ªãƒ¼ãƒ—ãƒ³ã—ã¦ã„ã‚‹ãƒãƒ¥ãƒ¼ãƒŠã«é–¢ã—ã¦
 									if (m_pIBon != NULL)
 									{
 										BOOL bModule = FALSE;
@@ -726,20 +726,20 @@ DWORD cProxyServerEx::Process()
 												continue;
 											if (m_hModule == pInstance2->m_hModule)
 											{
-												bModule = TRUE;	// ƒ‚ƒWƒ…[ƒ‹g—pÒ—L‚è
+												bModule = TRUE;	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ä½¿ç”¨è€…æœ‰ã‚Š
 												if (m_pIBon == pInstance2->m_pIBon)
 												{
-													bIBon = TRUE;	// ƒCƒ“ƒXƒ^ƒ“ƒXg—pÒ—L‚è
+													bIBon = TRUE;	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ä½¿ç”¨è€…æœ‰ã‚Š
 													if (pInstance2->m_bTunerOpen)
 													{
-														bTuner = TRUE;	// ƒ`ƒ…[ƒig—pÒ—L‚è
+														bTuner = TRUE;	// ãƒãƒ¥ãƒ¼ãƒŠä½¿ç”¨è€…æœ‰ã‚Š
 														break;
 													}
 												}
 											}
 										}
 
-										// ƒ`ƒ…[ƒig—pÒ–³‚µ‚È‚çƒNƒ[ƒY
+										// ãƒãƒ¥ãƒ¼ãƒŠä½¿ç”¨è€…ç„¡ã—ãªã‚‰ã‚¯ãƒ­ãƒ¼ã‚º
 										if (!bTuner)
 										{
 											if (m_hTsRead)
@@ -753,12 +753,12 @@ DWORD cProxyServerEx::Process()
 											}
 											CloseTuner();
 											//m_bTunerOpen = FALSE;
-											// ‚©‚ÂƒCƒ“ƒXƒ^ƒ“ƒXg—pÒ‚à–³‚µ‚È‚çƒCƒ“ƒXƒ^ƒ“ƒXƒŠƒŠ[ƒX
+											// ã‹ã¤ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ä½¿ç”¨è€…ã‚‚ç„¡ã—ãªã‚‰ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒªãƒªãƒ¼ã‚¹
 											if (!bIBon)
 											{
 												Release();
 												// m_pIBon = NULL;
-												// ‚©‚Âƒ‚ƒWƒ…[ƒ‹g—pÒ‚à–³‚µ‚È‚çƒ‚ƒWƒ…[ƒ‹ƒŠƒŠ[ƒX
+												// ã‹ã¤ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ä½¿ç”¨è€…ã‚‚ç„¡ã—ãªã‚‰ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒªãƒªãƒ¼ã‚¹
 												if (!bModule)
 												{
 													std::vector<stDriver> &vstDriver = DriversMap.at(m_pDriversMapKey);
@@ -772,18 +772,18 @@ DWORD cProxyServerEx::Process()
 												}
 											}
 										}
-										else	// ‘¼‚Éƒ`ƒ…[ƒig—pÒ—L‚è‚Ìê‡
+										else	// ä»–ã«ãƒãƒ¥ãƒ¼ãƒŠä½¿ç”¨è€…æœ‰ã‚Šã®å ´åˆ
 										{
-											// Œ»İTSƒXƒgƒŠ[ƒ€”zM’†‚È‚ç‚»‚Ì”zM‘ÎÛƒŠƒXƒg‚©‚ç©g‚ğíœ
+											// ç¾åœ¨TSã‚¹ãƒˆãƒªãƒ¼ãƒ é…ä¿¡ä¸­ãªã‚‰ãã®é…ä¿¡å¯¾è±¡ãƒªã‚¹ãƒˆã‹ã‚‰è‡ªèº«ã‚’å‰Šé™¤
 											if (m_hTsRead)
 												StopTsReceive();
 										}
 									}
 
-									// ‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ª—v‹‚µ‚Ä‚¢‚é—Dæ“x‚ª255‚Å‚ ‚Á‚½ê‡‚É
+									// ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒè¦æ±‚ã—ã¦ã„ã‚‹å„ªå…ˆåº¦ãŒ255ã§ã‚ã£ãŸå ´åˆã«
 									if (bChannelLock == 0xff)
 									{
-										// Ø‚è‘Ö‚¦æƒ`ƒ…[ƒi‚É‘Î‚µ‚Ä—Dæ“x255‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ªŠù‚É‚¢‚é‚©H
+										// åˆ‡ã‚Šæ›¿ãˆå…ˆãƒãƒ¥ãƒ¼ãƒŠã«å¯¾ã—ã¦å„ªå…ˆåº¦255ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒæ—¢ã«ã„ã‚‹ã‹ï¼Ÿ
 										for (auto pInstance2 : g_InstanceList)
 										{
 											if (pInstance2 == this)
@@ -792,8 +792,8 @@ DWORD cProxyServerEx::Process()
 											{
 												if (pInstance2->m_bChannelLock == 0xff)
 												{
-													// ‚¢‚½ê‡‚ÍA‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ì—Dæ“x‚ğb’è“I‚É254‚É‚·‚é
-													// (‚»‚¤‚µ‚È‚¢‚ÆA—Dæ“x255‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚àƒ`ƒƒƒ“ƒlƒ‹•ÏX‚Å‚«‚È‚­‚È‚éˆ×)
+													// ã„ãŸå ´åˆã¯ã€ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å„ªå…ˆåº¦ã‚’æš«å®šçš„ã«254ã«ã™ã‚‹
+													// (ãã†ã—ãªã„ã¨ã€å„ªå…ˆåº¦255ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚‚ãƒãƒ£ãƒ³ãƒãƒ«å¤‰æ›´ã§ããªããªã‚‹ç‚º)
 													bChannelLock = 0xfe;
 													pHavePriv = pInstance2;
 													break;
@@ -802,21 +802,21 @@ DWORD cProxyServerEx::Process()
 										}
 									}
 
-									// ƒCƒ“ƒXƒ^ƒ“ƒXØ‚è‘Ö‚¦
+									// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åˆ‡ã‚Šæ›¿ãˆ
 									m_hModule = pInstance1->m_hModule;
 									m_iDriverNo = pInstance1->m_iDriverNo;
 									m_pIBon = pInstance1->m_pIBon;
 									m_pIBon2 = pInstance1->m_pIBon2;
 									m_pIBon3 = pInstance1->m_pIBon3;
 									m_bTunerOpen = TRUE;
-									m_hTsRead = pInstance1->m_hTsRead;	// ‚±‚Ì“_‚Å‚àNULL‚Ì‰Â”\«‚Íƒ[ƒ‚Å‚Í‚È‚¢
+									m_hTsRead = pInstance1->m_hTsRead;	// ã“ã®æ™‚ç‚¹ã§ã‚‚NULLã®å¯èƒ½æ€§ã¯ã‚¼ãƒ­ã§ã¯ãªã„
 									m_pTsReaderArg = pInstance1->m_pTsReaderArg;
 									if (m_hTsRead)
 									{
 										m_pTsReaderArg->TsLock.Enter();
 										m_pTsReaderArg->TsReceiversList.push_back(this);
 										m_pTsReaderArg->TsLock.Leave();
-										// Ø‚è‘Ö‚¦æ‚Ì‹¤—LƒCƒ“ƒXƒ^ƒ“ƒX‚Å–³Œø‚Ì‚Ü‚Ü‚¾‚Æ–â‘è‚ª¶‚¶‚é‚Ì‚Å—LŒø‰»‚·‚é
+										// åˆ‡ã‚Šæ›¿ãˆå…ˆã®å…±æœ‰ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã§ç„¡åŠ¹ã®ã¾ã¾ã ã¨å•é¡ŒãŒç”Ÿã˜ã‚‹ã®ã§æœ‰åŠ¹åŒ–ã™ã‚‹
 										const BOOL bDesiredUseB25 = static_cast<BOOL>(pPh->m_pPacket->head.m_bReserved1 & eDesireToUseB25);
 										if (bDesiredUseB25 && g_b25_enable)
 										{
@@ -840,12 +840,12 @@ DWORD cProxyServerEx::Process()
 									_RPT3(_CRT_WARN, "** found! ** : m_hModule[%p] / m_iDriverNo[%d] / m_pIBon[%p]\n", m_hModule, m_iDriverNo, m_pIBon);
 									_RPT3(_CRT_WARN, "             : m_dwSpace[%d] / m_dwChannel[%d] / m_bChannelLock[%d]\n", dwReqSpace, dwReqChannel, bChannelLock);
 #endif
-									// ‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ì—Dæ“x‚ª‰º‚°‚ç‚ê‚½ê‡
+									// ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å„ªå…ˆåº¦ãŒä¸‹ã’ã‚‰ã‚ŒãŸå ´åˆ
 									if (pHavePriv != NULL)
 									{
 										if (m_hTsRead)
 										{
-											// ”r‘¼Œ æ“¾‘Ò‚¿ƒŠƒXƒg‚É‚Ü‚¾©g‚ªŠÜ‚Ü‚ê‚Ä‚¢‚È‚¯‚ê‚Î’Ç‰Á
+											// æ’ä»–æ¨©å–å¾—å¾…ã¡ãƒªã‚¹ãƒˆã«ã¾ã è‡ªèº«ãŒå«ã¾ã‚Œã¦ã„ãªã‘ã‚Œã°è¿½åŠ 
 											BOOL bFind = FALSE;
 											for (auto pPriv : m_pTsReaderArg->WaitExclusivePrivList)
 											{
@@ -863,26 +863,26 @@ DWORD cProxyServerEx::Process()
 										}
 										else
 										{
-											// ‚±‚Ìˆ—‚ÌˆÓ}‚Í­‚µ‰º‚Ì“¯‚¶ˆ—‚ÌƒRƒƒ“ƒgQÆ
+											// ã“ã®å‡¦ç†ã®æ„å›³ã¯å°‘ã—ä¸‹ã®åŒã˜å‡¦ç†ã®ã‚³ãƒ¡ãƒ³ãƒˆå‚ç…§
 											pHavePriv->m_bChannelLock = 0;
 											bChannelLock = 0xff;
 										}
 									}
-									goto ok;	// ‚±‚ê‚Í“‚¢
+									goto ok;	// ã“ã‚Œã¯é…·ã„
 								}
 							}
 						}
 
-						// “¯ˆêƒ`ƒƒƒ“ƒlƒ‹‚ğg—p’†‚Ìƒ`ƒ…[ƒi‚ÍŒ©‚Â‚©‚ç‚¸AŒ»İ‚Ìƒ`ƒ…[ƒi‚Í‹¤—L‚³‚ê‚Ä‚¢‚½‚ç
+						// åŒä¸€ãƒãƒ£ãƒ³ãƒãƒ«ã‚’ä½¿ç”¨ä¸­ã®ãƒãƒ¥ãƒ¼ãƒŠã¯è¦‹ã¤ã‹ã‚‰ãšã€ç¾åœ¨ã®ãƒãƒ¥ãƒ¼ãƒŠã¯å…±æœ‰ã•ã‚Œã¦ã„ãŸã‚‰
 						if (bShared)
 						{
-							// o—ˆ‚ê‚Î–¢g—pA–³—‚È‚ç‚È‚é‚×‚­ƒƒbƒN‚³‚ê‚Ä‚È‚¢ƒ`ƒ…[ƒi‚ğ‘I‘ğ‚µ‚ÄA
-							// ˆê‹C‚Éƒ`ƒ…[ƒiƒI[ƒvƒ“ó‘Ô‚É‚Ü‚Å‚Á‚Äs‚­
+							// å‡ºæ¥ã‚Œã°æœªä½¿ç”¨ã€ç„¡ç†ãªã‚‰ãªã‚‹ã¹ããƒ­ãƒƒã‚¯ã•ã‚Œã¦ãªã„ãƒãƒ¥ãƒ¼ãƒŠã‚’é¸æŠã—ã¦ã€
+							// ä¸€æ°—ã«ãƒãƒ¥ãƒ¼ãƒŠã‚ªãƒ¼ãƒ—ãƒ³çŠ¶æ…‹ã«ã¾ã§æŒã£ã¦è¡Œã
 							if (SelectBonDriver(m_pDriversMapKey, bChannelLock))
 							{
 								if (m_pIBon == NULL)
 								{
-									// –¢g—pƒ`ƒ…[ƒi‚ª‚ ‚Á‚½
+									// æœªä½¿ç”¨ãƒãƒ¥ãƒ¼ãƒŠãŒã‚ã£ãŸ
 									if ((CreateBonDriver() == NULL) || (m_pIBon2 == NULL))
 									{
 										makePacket(eSetChannel2, (DWORD)0xff);
@@ -908,7 +908,7 @@ DWORD cProxyServerEx::Process()
 								break;
 							}
 
-							// g—pƒ`ƒ…[ƒi‚Ìƒ`ƒƒƒ“ƒlƒ‹ƒƒbƒNó‘ÔŠm”F
+							// ä½¿ç”¨ãƒãƒ¥ãƒ¼ãƒŠã®ãƒãƒ£ãƒ³ãƒãƒ«ãƒ­ãƒƒã‚¯çŠ¶æ…‹ç¢ºèª
 							for (auto pInstance : g_InstanceList)
 							{
 								if (pInstance == this)
@@ -919,9 +919,9 @@ DWORD cProxyServerEx::Process()
 										bLocked = TRUE;
 									else if (pInstance->m_bChannelLock == 0xff)
 									{
-										// ‘ÎÛƒ`ƒ…[ƒi‚É‘Î‚µ‚Ä—Dæ“x255‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ªŠù‚É‚¢‚éó‘Ô‚ÅA‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ª
-										// —v‹‚µ‚Ä‚¢‚é—Dæ“x‚à255‚Ìê‡A‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ì—Dæ“x‚ğb’è“I‚É254‚É‚·‚é
-										// (‚»‚¤‚µ‚È‚¢‚ÆA—Dæ“x255‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚àƒ`ƒƒƒ“ƒlƒ‹•ÏX‚Å‚«‚È‚­‚È‚éˆ×)
+										// å¯¾è±¡ãƒãƒ¥ãƒ¼ãƒŠã«å¯¾ã—ã¦å„ªå…ˆåº¦255ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒæ—¢ã«ã„ã‚‹çŠ¶æ…‹ã§ã€ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒ
+										// è¦æ±‚ã—ã¦ã„ã‚‹å„ªå…ˆåº¦ã‚‚255ã®å ´åˆã€ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å„ªå…ˆåº¦ã‚’æš«å®šçš„ã«254ã«ã™ã‚‹
+										// (ãã†ã—ãªã„ã¨ã€å„ªå…ˆåº¦255ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚‚ãƒãƒ£ãƒ³ãƒãƒ«å¤‰æ›´ã§ããªããªã‚‹ç‚º)
 										bChannelLock = 0xfe;
 										bLocked = TRUE;
 										pHavePriv = pInstance;
@@ -930,12 +930,12 @@ DWORD cProxyServerEx::Process()
 										break;
 								}
 							}
-							// ‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ì—Dæ“x‚ª‰º‚°‚ç‚ê‚½ê‡
+							// ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å„ªå…ˆåº¦ãŒä¸‹ã’ã‚‰ã‚ŒãŸå ´åˆ
 							if (pHavePriv != NULL)
 							{
 								if (m_hTsRead)
 								{
-									// ”r‘¼Œ æ“¾‘Ò‚¿ƒŠƒXƒg‚É‚Ü‚¾©g‚ªŠÜ‚Ü‚ê‚Ä‚¢‚È‚¯‚ê‚Î’Ç‰Á
+									// æ’ä»–æ¨©å–å¾—å¾…ã¡ãƒªã‚¹ãƒˆã«ã¾ã è‡ªèº«ãŒå«ã¾ã‚Œã¦ã„ãªã‘ã‚Œã°è¿½åŠ 
 									BOOL bFind = FALSE;
 									for (auto pPriv : m_pTsReaderArg->WaitExclusivePrivList)
 									{
@@ -953,11 +953,11 @@ DWORD cProxyServerEx::Process()
 								}
 								else
 								{
-									// ‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ì—Dæ“x‚ª‰º‚°‚ç‚ê‚½‚ªA”r‘¼Œ ‚ğ‚Á‚Ä‚¢‚éƒCƒ“ƒXƒ^ƒ“ƒX‚Ö‚Ì”zM‚ª
-									// ŠJn‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍA‚»‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚©‚ç”r‘¼Œ ‚ğ’D‚¤
-									// ‚±‚¤‚·‚é–‚ª‹““®‚Æ‚µ‚Ä–]‚Ü‚µ‚¢‚Ì‚©‚Ç‚¤‚©‚Í”÷–­‚¾‚ªA‚»‚à‚»‚à‚±‚±‚É—ˆ‚é‚Ì‚ÍA
-									// “–ŠYƒCƒ“ƒXƒ^ƒ“ƒX‚Å‚ÌSetChannel()‚Ì¸”sŒãA‰½‚à‚¹‚¸‚ÉÚ‘±‚¾‚¯‘±‚¯‚Ä‚¢‚éó‘Ô‚Å‚ ‚èA
-									// ‰Â”\«‚Æ‚µ‚Ä‚Íƒ[ƒ‚Å‚Í‚È‚¢‚à‚Ì‚ÌA‚©‚È‚è‚ÌƒŒƒAƒP[ƒX‚ÉŒÀ‚ç‚ê‚é‚Í‚¸
+									// ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å„ªå…ˆåº¦ãŒä¸‹ã’ã‚‰ã‚ŒãŸãŒã€æ’ä»–æ¨©ã‚’æŒã£ã¦ã„ã‚‹ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¸ã®é…ä¿¡ãŒ
+									// é–‹å§‹ã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã€ãã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‹ã‚‰æ’ä»–æ¨©ã‚’å¥ªã†
+									// ã“ã†ã™ã‚‹äº‹ãŒæŒ™å‹•ã¨ã—ã¦æœ›ã¾ã—ã„ã®ã‹ã©ã†ã‹ã¯å¾®å¦™ã ãŒã€ãã‚‚ãã‚‚ã“ã“ã«æ¥ã‚‹ã®ã¯ã€
+									// å½“è©²ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã§ã®SetChannel()ã®å¤±æ•—å¾Œã€ä½•ã‚‚ã›ãšã«æ¥ç¶šã ã‘ç¶šã‘ã¦ã„ã‚‹çŠ¶æ…‹ã§ã‚ã‚Šã€
+									// å¯èƒ½æ€§ã¨ã—ã¦ã¯ã‚¼ãƒ­ã§ã¯ãªã„ã‚‚ã®ã®ã€ã‹ãªã‚Šã®ãƒ¬ã‚¢ã‚±ãƒ¼ã‚¹ã«é™ã‚‰ã‚Œã‚‹ã¯ãš
 									pHavePriv->m_bChannelLock = 0;
 									bChannelLock = 0xff;
 								}
@@ -971,9 +971,9 @@ DWORD cProxyServerEx::Process()
 
 						if (bLocked)
 						{
-							// ƒƒbƒN‚³‚ê‚Ä‚é‚Í’Pƒ‚ÉƒƒbƒN‚³‚ê‚Ä‚é–‚ğ’Ê’m
-							// ‚±‚Ìê‡ƒNƒ‰ƒCƒAƒ“ƒgƒAƒvƒŠ‚Ö‚ÌSetChannel()‚Ì–ß‚è’l‚Í¬Œ÷‚É‚È‚é
-							// (‚¨‚»‚ç‚­’v–½“I‚È–â‘è‚É‚Í‚È‚ç‚È‚¢)
+							// ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ã‚‹æ™‚ã¯å˜ç´”ã«ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ã‚‹äº‹ã‚’é€šçŸ¥
+							// ã“ã®å ´åˆã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚¢ãƒ—ãƒªã¸ã®SetChannel()ã®æˆ»ã‚Šå€¤ã¯æˆåŠŸã«ãªã‚‹
+							// (ãŠãã‚‰ãè‡´å‘½çš„ãªå•é¡Œã«ã¯ãªã‚‰ãªã„)
 							makePacket(eSetChannel2, (DWORD)0x01);
 						}
 						else
@@ -983,13 +983,13 @@ DWORD cProxyServerEx::Process()
 							bSuccess = SetChannel(dwReqSpace, dwReqChannel);
 							if (m_hTsRead)
 							{
-								// ˆê’UƒƒbƒN‚ğŠO‚·‚Æƒ`ƒƒƒ“ƒlƒ‹•ÏX‘O‚Ìƒf[ƒ^‚ª‘—M‚³‚ê‚È‚¢–‚ğ•ÛØ‚Å‚«‚È‚­‚È‚éˆ×A
-								// ƒ`ƒƒƒ“ƒlƒ‹•ÏX‘O‚Ìƒf[ƒ^‚Ì”jŠü‚ÆCNR‚ÌXVw¦‚Í‚±‚±‚Ås‚¤
+								// ä¸€æ—¦ãƒ­ãƒƒã‚¯ã‚’å¤–ã™ã¨ãƒãƒ£ãƒ³ãƒãƒ«å¤‰æ›´å‰ã®ãƒ‡ãƒ¼ã‚¿ãŒé€ä¿¡ã•ã‚Œãªã„äº‹ã‚’ä¿è¨¼ã§ããªããªã‚‹ç‚ºã€
+								// ãƒãƒ£ãƒ³ãƒãƒ«å¤‰æ›´å‰ã®ãƒ‡ãƒ¼ã‚¿ã®ç ´æ£„ã¨CNRã®æ›´æ–°æŒ‡ç¤ºã¯ã“ã“ã§è¡Œã†
 								if (bSuccess)
 								{
-									// “¯ˆêƒ`ƒƒƒ“ƒlƒ‹‚ğg—p’†‚Ìƒ`ƒ…[ƒi‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚ÍA‚±‚ÌƒŠƒNƒGƒXƒg‚Å
-									// ƒCƒ“ƒXƒ^ƒ“ƒX‚ÌØ‚è‘Ö‚¦‚ª”­¶‚µ‚Ä‚¢‚½‚Æ‚µ‚Ä‚àA‚±‚Ì“_‚Å‚Í‚Ç‚¤‚¹ƒ`ƒƒƒ“ƒlƒ‹‚ª
-									// •ÏX‚³‚ê‚Ä‚¢‚é‚Ì‚ÅA–¢‘—Mƒoƒbƒtƒ@‚ğ”jŠü‚µ‚Ä‚à•Ê‚É–â‘è‚É‚Í‚È‚ç‚È‚¢ƒnƒY
+									// åŒä¸€ãƒãƒ£ãƒ³ãƒãƒ«ã‚’ä½¿ç”¨ä¸­ã®ãƒãƒ¥ãƒ¼ãƒŠãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆã¯ã€ã“ã®ãƒªã‚¯ã‚¨ã‚¹ãƒˆã§
+									// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®åˆ‡ã‚Šæ›¿ãˆãŒç™ºç”Ÿã—ã¦ã„ãŸã¨ã—ã¦ã‚‚ã€ã“ã®æ™‚ç‚¹ã§ã¯ã©ã†ã›ãƒãƒ£ãƒ³ãƒãƒ«ãŒ
+									// å¤‰æ›´ã•ã‚Œã¦ã„ã‚‹ã®ã§ã€æœªé€ä¿¡ãƒãƒƒãƒ•ã‚¡ã‚’ç ´æ£„ã—ã¦ã‚‚åˆ¥ã«å•é¡Œã«ã¯ãªã‚‰ãªã„ãƒã‚º
 									m_pTsReaderArg->pos = 0;
 									m_pTsReaderArg->ChannelChanged = TRUE;
 								}
@@ -1033,7 +1033,7 @@ DWORD cProxyServerEx::Process()
 								}
 								if (bSetChannel)
 								{
-									// SetChannel()‚ªs‚í‚ê‚½ê‡‚ÍA“¯ˆêBonDriverƒCƒ“ƒXƒ^ƒ“ƒX‚ğg—p‚µ‚Ä‚¢‚éƒCƒ“ƒXƒ^ƒ“ƒX‚Ì•Ûƒ`ƒƒƒ“ƒlƒ‹‚ğ•ÏX
+									// SetChannel()ãŒè¡Œã‚ã‚ŒãŸå ´åˆã¯ã€åŒä¸€BonDriverã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ä¿æŒãƒãƒ£ãƒ³ãƒãƒ«ã‚’å¤‰æ›´
 									for (auto pInstance : g_InstanceList)
 									{
 										if (pInstance == this)
@@ -1042,10 +1042,10 @@ DWORD cProxyServerEx::Process()
 										{
 											pInstance->m_dwSpace = dwReqSpace;
 											pInstance->m_dwChannel = dwReqChannel;
-											// ‘ÎÛƒCƒ“ƒXƒ^ƒ“ƒX‚ª‚Ü‚¾ˆê“x‚àSetChannel()‚ğs‚Á‚Ä‚¢‚È‚©‚Á‚½ê‡
+											// å¯¾è±¡ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒã¾ã ä¸€åº¦ã‚‚SetChannel()ã‚’è¡Œã£ã¦ã„ãªã‹ã£ãŸå ´åˆ
 											if (pInstance->m_hTsRead == NULL)
 											{
-												// ‹­§“I‚É”zMŠJn
+												// å¼·åˆ¶çš„ã«é…ä¿¡é–‹å§‹
 												pInstance->m_bTunerOpen = TRUE;
 												pInstance->m_hTsRead = m_hTsRead;
 												pInstance->m_pTsReaderArg = m_pTsReaderArg;
@@ -1176,10 +1176,10 @@ DWORD cProxyServerEx::Process()
 		}
 
 		case WAIT_OBJECT_0 + 2:
-			// I—¹—v‹
+			// çµ‚äº†è¦æ±‚
 			// fall-through
 		default:
-			// ‰½‚©‚ÌƒGƒ‰[
+			// ä½•ã‹ã®ã‚¨ãƒ©ãƒ¼
 			m_Error.Set();
 			goto end;
 		}
@@ -1215,7 +1215,7 @@ int cProxyServerEx::ReceiverHelper(char *pDst, DWORD left)
 		if (len == 0)
 			continue;
 
-		// MSDN‚Ìrecv()‚Ìƒ\[ƒX—á‚Æ‚©Œ©‚éŒÀ‚èA"SOCKET_ERROR"‚ª•‰‚Ì’l‚È‚Ì‚Í•ÛØ‚³‚ê‚Ä‚é‚Á‚Û‚¢
+		// MSDNã®recv()ã®ã‚½ãƒ¼ã‚¹ä¾‹ã¨ã‹è¦‹ã‚‹é™ã‚Šã€"SOCKET_ERROR"ãŒè² ã®å€¤ãªã®ã¯ä¿è¨¼ã•ã‚Œã¦ã‚‹ã£ã½ã„
 		if ((len = ::recv(m_s, pDst, left, 0)) <= 0)
 		{
 			ret = -3;
@@ -1366,7 +1366,7 @@ DWORD WINAPI cProxyServerEx::Sender(LPVOID pv)
 		}
 
 		default:
-			// ‰½‚©‚ÌƒGƒ‰[
+			// ä½•ã‹ã®ã‚¨ãƒ©ãƒ¼
 			pProxy->m_Error.Set();
 			ret = 102;
 			goto end;
@@ -1394,9 +1394,9 @@ DWORD WINAPI cProxyServerEx::TsReader(LPVOID pv)
 	DWORD Counter = 0;
 #endif
 
-	// “à•”‚ÅCOM‚ğg—p‚µ‚Ä‚¢‚éBonDriver‚É‘Î‚·‚é‘Îô
+	// å†…éƒ¨ã§COMã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹BonDriverã«å¯¾ã™ã‚‹å¯¾ç­–
 	HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE | COINIT_SPEED_OVER_MEMORY);
-	// TS“Ç‚İ‚İƒ‹[ƒv
+	// TSèª­ã¿è¾¼ã¿ãƒ«ãƒ¼ãƒ—
 	while (!StopTsRead)
 	{
 		dwSize = dwRemain = 0;
@@ -1483,10 +1483,10 @@ DWORD WINAPI cProxyServerEx::TsReader(LPVOID pv)
 
 void cProxyServerEx::StopTsReceive()
 {
-	// ‚±‚Ìƒƒ\ƒbƒh‚Í•K‚¸A
-	// 1. ƒOƒ[ƒoƒ‹‚ÈƒCƒ“ƒXƒ^ƒ“ƒXƒƒbƒN’†
-	// 2. ‚©‚ÂATSóM’†(m_hTsRead != NULL)
-	// ‚Ì2‚Â‚ğ–‚½‚·ó‘Ô‚ÅŒÄ‚Ño‚·–
+	// ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã¯å¿…ãšã€
+	// 1. ã‚°ãƒ­ãƒ¼ãƒãƒ«ãªã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒ­ãƒƒã‚¯ä¸­
+	// 2. ã‹ã¤ã€TSå—ä¿¡ä¸­(m_hTsRead != NULL)
+	// ã®2ã¤ã‚’æº€ãŸã™çŠ¶æ…‹ã§å‘¼ã³å‡ºã™äº‹
 	m_pTsReaderArg->TsLock.Enter();
 	std::list<cProxyServerEx *>::iterator it = m_pTsReaderArg->TsReceiversList.begin();
 	while (it != m_pTsReaderArg->TsReceiversList.end())
@@ -1500,13 +1500,13 @@ void cProxyServerEx::StopTsReceive()
 	}
 	m_pTsReaderArg->TsLock.Leave();
 
-	// ‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Íƒ`ƒƒƒ“ƒlƒ‹”r‘¼Œ ‚ğ‚Á‚Ä‚¢‚é‚©H
+	// ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ãƒãƒ£ãƒ³ãƒãƒ«æ’ä»–æ¨©ã‚’æŒã£ã¦ã„ã‚‹ã‹ï¼Ÿ
 	if (m_bChannelLock == 0xff)
 	{
-		// ‚Á‚Ä‚¢‚½ê‡‚ÍA”r‘¼Œ æ“¾‘Ò‚¿‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Í‘¶İ‚µ‚Ä‚¢‚é‚©H
+		// æŒã£ã¦ã„ãŸå ´åˆã¯ã€æ’ä»–æ¨©å–å¾—å¾…ã¡ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯å­˜åœ¨ã—ã¦ã„ã‚‹ã‹ï¼Ÿ
 		if (m_pTsReaderArg->WaitExclusivePrivList.size() > 0)
 		{
-			// ‘¶İ‚·‚éê‡‚ÍAƒŠƒXƒgæ“ª‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚É”r‘¼Œ ‚ğˆø‚«Œp‚¬AƒŠƒXƒg‚©‚çíœ
+			// å­˜åœ¨ã™ã‚‹å ´åˆã¯ã€ãƒªã‚¹ãƒˆå…ˆé ­ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã«æ’ä»–æ¨©ã‚’å¼•ãç¶™ãã€ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤
 			cProxyServerEx *p = m_pTsReaderArg->WaitExclusivePrivList.front();
 			m_pTsReaderArg->WaitExclusivePrivList.pop_front();
 			p->m_bChannelLock = 0xff;
@@ -1514,11 +1514,11 @@ void cProxyServerEx::StopTsReceive()
 	}
 	else
 	{
-		// ‚Á‚Ä‚¢‚È‚¢ê‡‚ÍA”r‘¼Œ æ“¾‘Ò‚¿ƒŠƒXƒg‚É©g‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é‚©‚à‚µ‚ê‚È‚¢‚Ì‚Åíœ
+		// æŒã£ã¦ã„ãªã„å ´åˆã¯ã€æ’ä»–æ¨©å–å¾—å¾…ã¡ãƒªã‚¹ãƒˆã«è‡ªèº«ãŒå«ã¾ã‚Œã¦ã„ã‚‹ã‹ã‚‚ã—ã‚Œãªã„ã®ã§å‰Šé™¤
 		m_pTsReaderArg->WaitExclusivePrivList.remove(this);
 	}
 
-	// ©•ª‚ªÅŒã‚ÌóMÒ‚¾‚Á‚½ê‡‚ÍATS”zMƒXƒŒƒbƒh‚à’â~
+	// è‡ªåˆ†ãŒæœ€å¾Œã®å—ä¿¡è€…ã ã£ãŸå ´åˆã¯ã€TSé…ä¿¡ã‚¹ãƒ¬ãƒƒãƒ‰ã‚‚åœæ­¢
 	if (m_pTsReaderArg->TsReceiversList.empty())
 	{
 		m_pTsReaderArg->StopTsRead = TRUE;
@@ -1559,13 +1559,13 @@ BOOL cProxyServerEx::SelectBonDriver(LPCSTR p, BYTE bChannelLock)
 		return FALSE;
 	}
 
-	// Œ»İ‚ğæ“¾‚µ‚Ä‚¨‚­
+	// ç¾åœ¨æ™‚åˆ»ã‚’å–å¾—ã—ã¦ãŠã
 	SYSTEMTIME stNow;
 	FILETIME ftNow;
 	::GetLocalTime(&stNow);
 	::SystemTimeToFileTime(&stNow, &ftNow);
 
-	// ‚Ü‚¸g‚í‚ê‚Ä‚È‚¢‚Ì‚ğ’T‚·
+	// ã¾ãšä½¿ã‚ã‚Œã¦ãªã„ã®ã‚’æ¢ã™
 	std::vector<stDriver> &vstDriver = *pvstDriver;
 	int i;
 	if (m_iDriverUseOrder == 0)
@@ -1592,11 +1592,11 @@ BOOL cProxyServerEx::SelectBonDriver(LPCSTR p, BYTE bChannelLock)
 		m_pDriversMapKey = pKey;
 		m_iDriverNo = i;
 
-		// Šeí€–ÚÄ‰Šú‰»‚Ì‘O‚ÉAŒ»İTSƒXƒgƒŠ[ƒ€”zM’†‚È‚ç‚»‚Ì”zM‘ÎÛƒŠƒXƒg‚©‚ç©g‚ğíœ
+		// å„ç¨®é …ç›®å†åˆæœŸåŒ–ã®å‰ã«ã€ç¾åœ¨TSã‚¹ãƒˆãƒªãƒ¼ãƒ é…ä¿¡ä¸­ãªã‚‰ãã®é…ä¿¡å¯¾è±¡ãƒªã‚¹ãƒˆã‹ã‚‰è‡ªèº«ã‚’å‰Šé™¤
 		if (m_hTsRead)
 			StopTsReceive();
 
-		// eSetChannel2‚©‚ç‚àŒÄ‚Î‚ê‚é‚Ì‚ÅAŠeí€–ÚÄ‰Šú‰»
+		// eSetChannel2ã‹ã‚‰ã‚‚å‘¼ã°ã‚Œã‚‹ã®ã§ã€å„ç¨®é …ç›®å†åˆæœŸåŒ–
 		m_pIBon = m_pIBon2 = m_pIBon3 = NULL;
 		m_bTunerOpen = FALSE;
 		m_hTsRead = NULL;
@@ -1617,18 +1617,18 @@ BOOL cProxyServerEx::SelectBonDriver(LPCSTR p, BYTE bChannelLock)
 		}
 	}
 
-	// ‘S•”g‚í‚ê‚Ä‚½‚ç(‚ ‚é‚¢‚ÍLoadLibrary()o—ˆ‚È‚¯‚ê‚Î)A‚ ‚éƒCƒ“ƒXƒ^ƒ“ƒX‚ğg—p‚µ‚Ä‚¢‚é
-	// ƒNƒ‰ƒCƒAƒ“ƒgŒQ‚Ìƒ`ƒƒƒ“ƒlƒ‹—Dæ“x‚ÌÅ‘å’l‚ªÅ‚à’á‚¢ƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‘I‘ğ‚·‚é
-	// “¯’l‚Ì•¨‚ª•¡”‚ ‚Á‚½ê‡‚ÍBonDriver‚Ìƒ[ƒh(‚à‚µ‚­‚Íg—p—v‹)‚ªŒÃ‚¢•¨‚ğ—Dæ
+	// å…¨éƒ¨ä½¿ã‚ã‚Œã¦ãŸã‚‰(ã‚ã‚‹ã„ã¯LoadLibrary()å‡ºæ¥ãªã‘ã‚Œã°)ã€ã‚ã‚‹ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹
+	// ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç¾¤ã®ãƒãƒ£ãƒ³ãƒãƒ«å„ªå…ˆåº¦ã®æœ€å¤§å€¤ãŒæœ€ã‚‚ä½ã„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’é¸æŠã™ã‚‹
+	// åŒå€¤ã®ç‰©ãŒè¤‡æ•°ã‚ã£ãŸå ´åˆã¯BonDriverã®ãƒ­ãƒ¼ãƒ‰æ™‚åˆ»(ã‚‚ã—ãã¯ä½¿ç”¨è¦æ±‚æ™‚åˆ»)ãŒå¤ã„ç‰©ã‚’å„ªå…ˆ
 	cProxyServerEx *pCandidate = NULL;
 	std::vector<cProxyServerEx *> vpCandidate;
 	for (auto pInstance1 : g_InstanceList)
 	{
 		if (pInstance1 == this)
 			continue;
-		if (pKey == pInstance1->m_pDriversMapKey)	// ‚±‚Ì’iŠK‚Å‚Í•¶š—ñ”äŠr‚Å‚ ‚é•K—v‚Í–³‚¢
+		if (pKey == pInstance1->m_pDriversMapKey)	// ã“ã®æ®µéšã§ã¯æ–‡å­—åˆ—æ¯”è¼ƒã§ã‚ã‚‹å¿…è¦ã¯ç„¡ã„
 		{
-			// Œó•âƒŠƒXƒg‚ÉŠù‚É“ü‚ê‚Ä‚¢‚é‚È‚çˆÈŒã‚Ìƒ`ƒFƒbƒN‚Í•s—v
+			// å€™è£œãƒªã‚¹ãƒˆã«æ—¢ã«å…¥ã‚Œã¦ã„ã‚‹ãªã‚‰ä»¥å¾Œã®ãƒã‚§ãƒƒã‚¯ã¯ä¸è¦
 			for (i = 0; i < (int)vpCandidate.size(); i++)
 			{
 				if (vpCandidate[i]->m_hModule == pInstance1->m_hModule)
@@ -1636,9 +1636,9 @@ BOOL cProxyServerEx::SelectBonDriver(LPCSTR p, BYTE bChannelLock)
 			}
 			if (i != (int)vpCandidate.size())
 				continue;
-			// b’èŒó•â
+			// æš«å®šå€™è£œ
 			pCandidate = pInstance1;
-			// ‚±‚Ìb’èŒó•â‚ªg—p‚µ‚Ä‚¢‚éƒCƒ“ƒXƒ^ƒ“ƒX‚ÍƒƒbƒN‚³‚ê‚Ä‚¢‚é‚©H
+			// ã“ã®æš«å®šå€™è£œãŒä½¿ç”¨ã—ã¦ã„ã‚‹ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ã„ã‚‹ã‹ï¼Ÿ
 			BOOL bLocked = FALSE;
 			for (auto pInstance2 : g_InstanceList)
 			{
@@ -1646,14 +1646,14 @@ BOOL cProxyServerEx::SelectBonDriver(LPCSTR p, BYTE bChannelLock)
 					continue;
 				if (pCandidate->m_hModule == pInstance2->m_hModule)
 				{
-					if ((pInstance2->m_bChannelLock > bChannelLock) || (pInstance2->m_bChannelLock == 0xff))	// ƒƒbƒN‚³‚ê‚Ä‚½
+					if ((pInstance2->m_bChannelLock > bChannelLock) || (pInstance2->m_bChannelLock == 0xff))	// ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ãŸ
 					{
 						bLocked = TRUE;
 						break;
 					}
 				}
 			}
-			if (!bLocked)	// ƒƒbƒN‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎŒó•âƒŠƒXƒg‚É’Ç‰Á
+			if (!bLocked)	// ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ã„ãªã‘ã‚Œã°å€™è£œãƒªã‚¹ãƒˆã«è¿½åŠ 
 				vpCandidate.push_back(pCandidate);
 		}
 	}
@@ -1662,16 +1662,16 @@ BOOL cProxyServerEx::SelectBonDriver(LPCSTR p, BYTE bChannelLock)
 	_RPT1(_CRT_WARN, "** SelectBonDriver ** : vpCandidate.size[%zd]\n", vpCandidate.size());
 #endif
 
-	// Œó•âƒŠƒXƒg‚ª‹ó‚Å‚È‚¯‚ê‚Î(==ƒƒbƒN‚³‚ê‚Ä‚¢‚È‚¢ƒCƒ“ƒXƒ^ƒ“ƒX‚ª‚ ‚Á‚½‚È‚ç)
+	// å€™è£œãƒªã‚¹ãƒˆãŒç©ºã§ãªã‘ã‚Œã°(==ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ã„ãªã„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒã‚ã£ãŸãªã‚‰)
 	if (vpCandidate.size() != 0)
 	{
 		pCandidate = vpCandidate[0];
-		// Œó•â‚É‘I‘ğ‚Ì—]’n‚Í‚ ‚é‚©H
+		// å€™è£œã«é¸æŠã®ä½™åœ°ã¯ã‚ã‚‹ã‹ï¼Ÿ
 		if (vpCandidate.size() > 1)
 		{
-			// Ú‘±ƒNƒ‰ƒCƒAƒ“ƒgŒQ‚Ìƒ`ƒƒƒ“ƒlƒ‹—Dæ“x‚ÌÅ‘å’l‚ªÅ‚à’á‚¢ƒCƒ“ƒXƒ^ƒ“ƒX‚ğ’T‚·
-			// ‚È‚¨áŠ±‚â‚â‚±‚µ‚¢‚ªA©g‚ª”r‘¼Œ ‚ğ‚Á‚Ä‚¨‚èA‚©‚Â”r‘¼Œ æ“¾‘Ò‚¿‚ª‚¢‚½ê‡‚àA
-			// Œ³‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Í‚±‚Ì“_‚Å‚ÌŒó•âƒŠƒXƒg‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚é
+			// æ¥ç¶šã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç¾¤ã®ãƒãƒ£ãƒ³ãƒãƒ«å„ªå…ˆåº¦ã®æœ€å¤§å€¤ãŒæœ€ã‚‚ä½ã„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æ¢ã™
+			// ãªãŠè‹¥å¹²ã‚„ã‚„ã“ã—ã„ãŒã€è‡ªèº«ãŒæ’ä»–æ¨©ã‚’æŒã£ã¦ãŠã‚Šã€ã‹ã¤æ’ä»–æ¨©å–å¾—å¾…ã¡ãŒã„ãŸå ´åˆã‚‚ã€
+			// å…ƒã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ã“ã®æ™‚ç‚¹ã§ã®å€™è£œãƒªã‚¹ãƒˆã«å«ã¾ã‚Œã¦ã„ã‚‹
 			BYTE bGroupMaxPriv, bMinPriv;
 			std::vector<BYTE> vbGroupMaxPriv(vpCandidate.size());
 			bMinPriv = 0xff;
@@ -1704,29 +1704,29 @@ BOOL cProxyServerEx::SelectBonDriver(LPCSTR p, BYTE bChannelLock)
 #if _DEBUG && DETAILLOG2
 			_RPT1(_CRT_WARN, "                      : vpCandidate2.size[%zd]\n", vpCandidate2.size());
 #endif
-			// eSetChannel2‚©‚ç‚ÌŒÄ‚Ño‚µ‚Ìê‡
+			// eSetChannel2ã‹ã‚‰ã®å‘¼ã³å‡ºã—ã®å ´åˆ
 			if (m_pIBon)
 			{
 				for (i = 0; i < (int)vpCandidate2.size(); ++i)
 				{
-					// ‚±‚Ì“_‚Å‚ÌŒó•âƒŠƒXƒg‚ÉŒ»İ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ªŠÜ‚Ü‚ê‚Ä‚¢‚½ê‡‚Í
+					// ã“ã®æ™‚ç‚¹ã§ã®å€™è£œãƒªã‚¹ãƒˆã«ç¾åœ¨ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒå«ã¾ã‚Œã¦ã„ãŸå ´åˆã¯
 					if (m_hModule == vpCandidate2[i]->m_hModule)
 					{
-						// Œ»İ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğŒp‘±g—p
-						// u“¯’l‚Ì•¨‚ª•¡”‚ ‚Á‚½ê‡‚ÍBonDriver‚Ìƒ[ƒh(‚à‚µ‚­‚Íg—p—v‹)‚ªŒÃ‚¢•¨‚ğ—Dæv
-						// ‚ªç‚ç‚ê‚È‚¢–‚É‚È‚éê‡‚à‚ ‚é‚ªAŒø—¦—Dæ
+						// ç¾åœ¨ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç¶™ç¶šä½¿ç”¨
+						// ã€ŒåŒå€¤ã®ç‰©ãŒè¤‡æ•°ã‚ã£ãŸå ´åˆã¯BonDriverã®ãƒ­ãƒ¼ãƒ‰æ™‚åˆ»(ã‚‚ã—ãã¯ä½¿ç”¨è¦æ±‚æ™‚åˆ»)ãŒå¤ã„ç‰©ã‚’å„ªå…ˆã€
+						// ãŒå®ˆã‚‰ã‚Œãªã„äº‹ã«ãªã‚‹å ´åˆã‚‚ã‚ã‚‹ãŒã€åŠ¹ç‡å„ªå…ˆ
 						vstDriver[m_iDriverNo].ftLoad = ftNow;
 						return TRUE;
 					}
 				}
 			}
 
-			// vpCandidate2.size()‚ª1ˆÈã‚È‚Ì‚Í•ÛØ‚³‚ê‚Ä‚¢‚é
+			// vpCandidate2.size()ãŒ1ä»¥ä¸Šãªã®ã¯ä¿è¨¼ã•ã‚Œã¦ã„ã‚‹
 			pCandidate = vpCandidate2[0];
-			// ƒCƒ“ƒXƒ^ƒ“ƒX–ˆ‚ÌÅ‘å—Dæ“x‚ÌÅ¬’l‚ª•¡”ƒCƒ“ƒXƒ^ƒ“ƒX‚Å“¯’l‚Å‚ ‚Á‚½ê‡
+			// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹æ¯ã®æœ€å¤§å„ªå…ˆåº¦ã®æœ€å°å€¤ãŒè¤‡æ•°ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã§åŒå€¤ã§ã‚ã£ãŸå ´åˆ
 			if (vpCandidate2.size() > 1)
 			{
-				// BonDriver‚Ìƒ[ƒh‚ªˆê”ÔŒÃ‚¢‚Ì‚ğ’T‚·
+				// BonDriverã®ãƒ­ãƒ¼ãƒ‰æ™‚åˆ»ãŒä¸€ç•ªå¤ã„ã®ã‚’æ¢ã™
 				FILETIME ft = vstDriver[vpCandidate2[0]->m_iDriverNo].ftLoad;
 				for (i = 1; i < (int)vpCandidate2.size(); i++)
 				{
@@ -1740,42 +1740,42 @@ BOOL cProxyServerEx::SelectBonDriver(LPCSTR p, BYTE bChannelLock)
 		}
 		else
 		{
-			// eSetChannel2‚©‚ç‚ÌŒÄ‚Ño‚µ‚Ìê‡
+			// eSetChannel2ã‹ã‚‰ã®å‘¼ã³å‡ºã—ã®å ´åˆ
 			if (m_pIBon)
 			{
-				// —Bˆê‚ÌŒó•â‚ªŒ»İ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Æ“¯‚¶‚¾‚Á‚½ê‡‚Í
+				// å”¯ä¸€ã®å€™è£œãŒç¾åœ¨ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¨åŒã˜ã ã£ãŸå ´åˆã¯
 				if (m_hModule == pCandidate->m_hModule)
 				{
-					// Œ»İ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğŒp‘±g—p
+					// ç¾åœ¨ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç¶™ç¶šä½¿ç”¨
 					vstDriver[m_iDriverNo].ftLoad = ftNow;
 					return TRUE;
 				}
 			}
 		}
 
-		// eSetChannel2‚©‚ç‚ÌŒÄ‚Ño‚µ‚Ìê‡‚©‚ÂŒ»İTSƒXƒgƒŠ[ƒ€”zM’†‚¾‚Á‚½‚È‚çA
-		// ƒCƒ“ƒXƒ^ƒ“ƒX‚ªØ‚è‘Ö‚í‚é‚Ì‚ÅAŒ»İ‚Ì”zM‘ÎÛƒŠƒXƒg‚©‚ç©g‚ğíœ
+		// eSetChannel2ã‹ã‚‰ã®å‘¼ã³å‡ºã—ã®å ´åˆã‹ã¤ç¾åœ¨TSã‚¹ãƒˆãƒªãƒ¼ãƒ é…ä¿¡ä¸­ã ã£ãŸãªã‚‰ã€
+		// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒåˆ‡ã‚Šæ›¿ã‚ã‚‹ã®ã§ã€ç¾åœ¨ã®é…ä¿¡å¯¾è±¡ãƒªã‚¹ãƒˆã‹ã‚‰è‡ªèº«ã‚’å‰Šé™¤
 		if (m_pIBon && m_hTsRead)
 			StopTsReceive();
 	}
 	else
 	{
-		// eSetChannel2‚©‚ç‚ÌŒÄ‚Ño‚µ‚Ìê‡
+		// eSetChannel2ã‹ã‚‰ã®å‘¼ã³å‡ºã—ã®å ´åˆ
 		if (m_pIBon)
 		{
-			// ƒƒbƒN‚³‚ê‚Ä‚¢‚È‚¢ƒCƒ“ƒXƒ^ƒ“ƒX‚ª–³‚©‚Á‚½‚Ì‚ÅŒ»İ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğŒp‘±g—p
+			// ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ã„ãªã„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒç„¡ã‹ã£ãŸã®ã§ç¾åœ¨ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç¶™ç¶šä½¿ç”¨
 			vstDriver[m_iDriverNo].ftLoad = ftNow;
 			return TRUE;
 		}
 	}
 
-	// NULL‚Å‚ ‚é–‚Í–³‚¢ƒnƒY‚¾‚¯‚Ç
+	// NULLã§ã‚ã‚‹äº‹ã¯ç„¡ã„ãƒã‚ºã ã‘ã©
 	if (pCandidate != NULL)
 	{
 		m_hModule = pCandidate->m_hModule;
 		m_pDriversMapKey = pCandidate->m_pDriversMapKey;
 		m_iDriverNo = pCandidate->m_iDriverNo;
-		m_pIBon = pCandidate->m_pIBon;	// pCandidate->m_pIBon‚ªNULL‚Ì‰Â”\«‚Íƒ[ƒ‚Å‚Í‚È‚¢
+		m_pIBon = pCandidate->m_pIBon;	// pCandidate->m_pIBonãŒNULLã®å¯èƒ½æ€§ã¯ã‚¼ãƒ­ã§ã¯ãªã„
 		m_pIBon2 = pCandidate->m_pIBon2;
 		m_pIBon3 = pCandidate->m_pIBon3;
 		m_bTunerOpen = pCandidate->m_bTunerOpen;
@@ -1783,11 +1783,11 @@ BOOL cProxyServerEx::SelectBonDriver(LPCSTR p, BYTE bChannelLock)
 		m_pTsReaderArg = pCandidate->m_pTsReaderArg;
 		m_dwSpace = pCandidate->m_dwSpace;
 		m_dwChannel = pCandidate->m_dwChannel;
-		// g—p‚·‚éBonDriver‚Ìƒ[ƒh(g—p—v‹)‚ğŒ»İ‚ÅXV
+		// ä½¿ç”¨ã™ã‚‹BonDriverã®ãƒ­ãƒ¼ãƒ‰æ™‚åˆ»(ä½¿ç”¨è¦æ±‚æ™‚åˆ»)ã‚’ç¾åœ¨æ™‚åˆ»ã§æ›´æ–°
 		vstDriver[m_iDriverNo].ftLoad = ftNow;
 	}
 
-	// ‘I‘ğ‚µ‚½ƒCƒ“ƒXƒ^ƒ“ƒX‚ªŠù‚ÉTSƒXƒgƒŠ[ƒ€”zM’†‚È‚çA‚»‚Ì”zM‘ÎÛƒŠƒXƒg‚É©g‚ğ’Ç‰Á
+	// é¸æŠã—ãŸã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒæ—¢ã«TSã‚¹ãƒˆãƒªãƒ¼ãƒ é…ä¿¡ä¸­ãªã‚‰ã€ãã®é…ä¿¡å¯¾è±¡ãƒªã‚¹ãƒˆã«è‡ªèº«ã‚’è¿½åŠ 
 	if (m_hTsRead)
 	{
 		m_pTsReaderArg->TsLock.Enter();
@@ -2055,12 +2055,12 @@ void NotifyIcon(int mode)
 		for (;;)
 		{
 			if (Shell_NotifyIcon(NIM_ADD, &nid))
-				break;	// “o˜^¬Œ÷
+				break;	// ç™»éŒ²æˆåŠŸ
 			if (GetLastError() != ERROR_TIMEOUT)
-				break;	// ƒ^ƒCƒ€ƒAƒEƒgˆÈŠO‚ÌƒGƒ‰[‚È‚Ì‚Å’ú‚ß‚é
-			Sleep(500);	// ‚¿‚å‚Á‚Æ‘Ò‚Á‚Ä‚©‚çŠm”F
+				break;	// ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆä»¥å¤–ã®ã‚¨ãƒ©ãƒ¼ãªã®ã§è«¦ã‚ã‚‹
+			Sleep(500);	// ã¡ã‚‡ã£ã¨å¾…ã£ã¦ã‹ã‚‰ç¢ºèª
 			if (Shell_NotifyIcon(NIM_MODIFY, &nid))
-				break;	// “o˜^¬Œ÷‚µ‚Ä‚½
+				break;	// ç™»éŒ²æˆåŠŸã—ã¦ãŸ
 		}
 	}
 	else
@@ -2086,7 +2086,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_CLOSE:
-		ModifyMenu(g_hMenu, 0, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_SHOW, _T("î•ñƒEƒBƒ“ƒhƒE•\¦"));
+		ModifyMenu(g_hMenu, 0, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_SHOW, _T("æƒ…å ±ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦è¡¨ç¤º"));
 		ShowWindow(hWnd, SW_HIDE);
 		return 0;
 
@@ -2160,14 +2160,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		{
 		case ID_TASKTRAY_SHOW:
 		{
-			ModifyMenu(g_hMenu, 0, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_HIDE, _T("î•ñƒEƒBƒ“ƒhƒE”ñ•\¦"));
+			ModifyMenu(g_hMenu, 0, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_HIDE, _T("æƒ…å ±ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦éè¡¨ç¤º"));
 			ShowWindow(hWnd, SW_SHOW);
 			return 0;
 		}
 
 		case ID_TASKTRAY_HIDE:
 		{
-			ModifyMenu(g_hMenu, 0, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_SHOW, _T("î•ñƒEƒBƒ“ƒhƒE•\¦"));
+			ModifyMenu(g_hMenu, 0, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_SHOW, _T("æƒ…å ±ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦è¡¨ç¤º"));
 			ShowWindow(hWnd, SW_HIDE);
 			return 0;
 		}
@@ -2176,14 +2176,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		{
 			if (!g_InstanceList.empty())
 			{
-				if (MessageBox(hWnd, _T("Ú‘±’†‚ÌƒNƒ‰ƒCƒAƒ“ƒg‚ª‘¶İ‚µ‚Ä‚¢‚Ü‚·BØ’f‚³‚ê‚Ü‚·‚ª‚æ‚ë‚µ‚¢‚Å‚·‚©H"), _T("Caution"), MB_YESNO) != IDYES)
+				if (MessageBox(hWnd, _T("æ¥ç¶šä¸­ã®ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãŒå­˜åœ¨ã—ã¦ã„ã¾ã™ã€‚åˆ‡æ–­ã•ã‚Œã¾ã™ãŒã‚ˆã‚ã—ã„ã§ã™ã‹ï¼Ÿ"), _T("Caution"), MB_YESNO) != IDYES)
 					return 0;
 			}
 			ShutdownInstances();
 			CleanUp();
 			if (Init(g_hInstance) != 0)
 			{
-				MessageBox(NULL, _T("iniƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB³‚µ‚­İ’u‚µ‚½‚Ì‚¿Ä“Ç‚İ‚İ‚µ‚Ä‰º‚³‚¢B"), _T("Error"), MB_OK);
+				MessageBox(NULL, _T("iniãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚æ­£ã—ãè¨­ç½®ã—ãŸã®ã¡å†èª­ã¿è¾¼ã¿ã—ã¦ä¸‹ã•ã„ã€‚"), _T("Error"), MB_OK);
 				return 0;
 			}
 			HostInfo *phi = new HostInfo;
@@ -2193,11 +2193,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			if (g_hListenThread == NULL)
 			{
 				delete phi;
-				MessageBox(NULL, _T("‘Ò‚¿ó‚¯ƒXƒŒƒbƒh‚Ìì¬‚É¸”s‚µ‚Ü‚µ‚½BI—¹‚µ‚Ü‚·B"), _T("Error"), MB_OK);
+				MessageBox(NULL, _T("å¾…ã¡å—ã‘ã‚¹ãƒ¬ãƒƒãƒ‰ã®ä½œæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚çµ‚äº†ã—ã¾ã™ã€‚"), _T("Error"), MB_OK);
 				PostQuitMessage(0);
 			}
 			else
-				MessageBox(hWnd, _T("Ä“Ç‚İ‚İ‚µ‚Ü‚µ‚½B"), _T("Info"), MB_OK);
+				MessageBox(hWnd, _T("å†èª­ã¿è¾¼ã¿ã—ã¾ã—ãŸã€‚"), _T("Info"), MB_OK);
 			return 0;
 		}
 
@@ -2205,7 +2205,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		{
 			if (!g_InstanceList.empty())
 			{
-				if (MessageBox(hWnd, _T("Ú‘±’†‚ÌƒNƒ‰ƒCƒAƒ“ƒg‚ª‘¶İ‚µ‚Ä‚¢‚Ü‚·‚ªA‚æ‚ë‚µ‚¢‚Å‚·‚©H"), _T("Caution"), MB_YESNO) != IDYES)
+				if (MessageBox(hWnd, _T("æ¥ç¶šä¸­ã®ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãŒå­˜åœ¨ã—ã¦ã„ã¾ã™ãŒã€ã‚ˆã‚ã—ã„ã§ã™ã‹ï¼Ÿ"), _T("Caution"), MB_YESNO) != IDYES)
 					return 0;
 			}
 			PostQuitMessage(0);
@@ -2235,19 +2235,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE/*hPrevInstance*/, LPSTR/*lpCmd
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);
 	_CrtSetReportFile(_CRT_ERROR, hLogFile);
 	_RPT0(_CRT_WARN, "--- PROCESS_START ---\n");
-//	int *p = new int[2];	// ƒŠ[ƒNŒŸoƒeƒXƒg—p
+//	int *p = new int[2];	// ãƒªãƒ¼ã‚¯æ¤œå‡ºãƒ†ã‚¹ãƒˆç”¨
 #endif
 
 	if (Init(hInstance) != 0)
 	{
-		MessageBox(NULL, _T("iniƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB"), _T("Error"), MB_OK);
+		MessageBox(NULL, _T("iniãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚"), _T("Error"), MB_OK);
 		return -1;
 	}
 
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
-		MessageBox(NULL, _T("winsock‚Ì‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½B"), _T("Error"), MB_OK);
+		MessageBox(NULL, _T("winsockã®åˆæœŸåŒ–ã«å¤±æ•—ã—ã¾ã—ãŸã€‚"), _T("Error"), MB_OK);
 		return -2;
 	}
 
@@ -2258,7 +2258,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE/*hPrevInstance*/, LPSTR/*lpCmd
 	if (g_hListenThread == NULL)
 	{
 		delete phi;
-		MessageBox(NULL, _T("‘Ò‚¿ó‚¯ƒXƒŒƒbƒh‚Ìì¬‚É¸”s‚µ‚Ü‚µ‚½B"), _T("Error"), MB_OK);
+		MessageBox(NULL, _T("å¾…ã¡å—ã‘ã‚¹ãƒ¬ãƒƒãƒ‰ã®ä½œæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚"), _T("Error"), MB_OK);
 		return -3;
 	}
 
@@ -2287,9 +2287,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE/*hPrevInstance*/, LPSTR/*lpCmd
 
 	g_hInstance = hInstance;
 	g_hMenu = CreatePopupMenu();
-	InsertMenu(g_hMenu, 0, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_SHOW, _T("î•ñƒEƒBƒ“ƒhƒE•\¦"));
-	InsertMenu(g_hMenu, 1, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_RELOAD, _T("iniÄ“Ç‚İ‚İ"));
-	InsertMenu(g_hMenu, 2, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_EXIT, _T("I—¹"));
+	InsertMenu(g_hMenu, 0, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_SHOW, _T("æƒ…å ±ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦è¡¨ç¤º"));
+	InsertMenu(g_hMenu, 1, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_RELOAD, _T("iniå†èª­ã¿è¾¼ã¿"));
+	InsertMenu(g_hMenu, 2, MF_BYPOSITION | MF_STRING, ID_TASKTRAY_EXIT, _T("çµ‚äº†"));
 	NotifyIcon(0);
 
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -2298,8 +2298,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE/*hPrevInstance*/, LPSTR/*lpCmd
 		DispatchMessage(&msg);
 	}
 
-	ShutdownInstances();	// g_hListenThread‚Í‚±‚Ì’†‚ÅCloseHandle()‚³‚ê‚é
-	CleanUp();				// ShutdownInstances()‚ÅDriversMap‚ÉƒAƒNƒZƒX‚·‚éƒXƒŒƒbƒh‚Í–³‚­‚È‚Á‚Ä‚¢‚é‚Í‚¸
+	ShutdownInstances();	// g_hListenThreadã¯ã“ã®ä¸­ã§CloseHandle()ã•ã‚Œã‚‹
+	CleanUp();				// ShutdownInstances()ã§DriversMapã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰ã¯ç„¡ããªã£ã¦ã„ã‚‹ã¯ãš
 
 	NotifyIcon(1);
 	DestroyMenu(g_hMenu);
@@ -2332,7 +2332,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE/*hPrevInstance*/, LPSTR/*lpCmd
 	int ret = Listen(g_Host, g_Port);
 
 	{
-		// —ˆ‚È‚¢‚¯‚Çˆê‰
+		// æ¥ãªã„ã‘ã©ä¸€å¿œ
 		LOCK(g_Lock);
 		CleanUp();
 	}

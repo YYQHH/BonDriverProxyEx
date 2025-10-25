@@ -1,4 +1,4 @@
-#ifndef __BDPPACKET_H__
+﻿#ifndef __BDPPACKET_H__
 #define __BDPPACKET_H__
 
 enum enumCommand {

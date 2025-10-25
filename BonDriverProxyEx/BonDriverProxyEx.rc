@@ -1,4 +1,4 @@
-#include "windows.h"
+﻿#include "windows.h"
 
 LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
 #pragma code_page(932)

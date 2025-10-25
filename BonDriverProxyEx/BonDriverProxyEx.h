@@ -1,4 +1,4 @@
-#ifndef __BONDRIVER_PROXYEX_H__
+ï»¿#ifndef __BONDRIVER_PROXYEX_H__
 #define __BONDRIVER_PROXYEX_H__
 
 #include <winsock2.h>
@@ -31,11 +31,11 @@
 #define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
 
-#define WAIT_TIME	10	// GetTsStream()‚ÌŒã‚ÅAdwRemain‚ª0‚¾‚Á‚½ê‡‚É‘Ò‚ÂŠÔ(ms)
+#define WAIT_TIME	10	// GetTsStream()ã®å¾Œã§ã€dwRemainãŒ0ã ã£ãŸå ´åˆã«å¾…ã¤æ™‚é–“(ms)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define MAX_HOSTS	8	// listen()‚Å‚«‚éƒ\ƒPƒbƒg‚ÌÅ‘å”
+#define MAX_HOSTS	8	// listen()ã§ãã‚‹ã‚½ã‚±ãƒƒãƒˆã®æœ€å¤§æ•°
 static char g_Host[512];
 static char g_Port[8];
 static char g_DriverDir[MAX_PATH + 16];
@@ -44,14 +44,14 @@ static DWORD g_TsPacketBufSize;
 static DWORD g_OpenTunerRetDelay;
 static BOOL g_SandBoxedRelease;
 static BOOL g_DisableUnloadBonDriver;
-static DWORD g_ProcessPriority;		// •s—v‚¾‚Æv‚¤‚¯‚Ç•Û‚µ‚Ä‚¨‚­
+static DWORD g_ProcessPriority;		// ä¸è¦ã ã¨æ€ã†ã‘ã©ä¿æŒã—ã¦ãŠã
 static int g_ThreadPriorityTsReader;
 static int g_ThreadPrioritySender;
 static EXECUTION_STATE g_ThreadExecutionState;
 
 #include "BdpPacket.h"
 
-#define MAX_DRIVERS	64		// ƒhƒ‰ƒCƒo‚ÌƒOƒ‹[ƒv”‚ÆƒOƒ‹[ƒv“à‚Ì”‚Ì—¼•û
+#define MAX_DRIVERS	64		// ãƒ‰ãƒ©ã‚¤ãƒã®ã‚°ãƒ«ãƒ¼ãƒ—æ•°ã¨ã‚°ãƒ«ãƒ¼ãƒ—å†…ã®æ•°ã®ä¸¡æ–¹
 static char **g_ppDriver[MAX_DRIVERS];
 struct stDriver {
 	char *strBonDriver;

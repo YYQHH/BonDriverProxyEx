@@ -1,4 +1,4 @@
-#include "CWinService.h"
+ï»¿#include "CWinService.h"
 
 CWinService CWinService::This;
 SERVICE_STATUS CWinService::serviceStatus;
@@ -7,10 +7,10 @@ HANDLE CWinService::hServerStopEvent;
 
 CWinService::CWinService()
 {
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	hServerStopEvent = NULL;
 
-	// ƒT[ƒrƒX–¼‚ğİ’è‚·‚é
+	// ã‚µãƒ¼ãƒ“ã‚¹åã‚’è¨­å®šã™ã‚‹
 	::GetModuleFileName(NULL, serviceExePath, BUFSIZ);
 	::_tsplitpath_s(serviceExePath, NULL, 0, NULL, 0, serviceName, BUFSIZ, NULL, 0);
 }
@@ -20,7 +20,7 @@ CWinService::~CWinService()
 }
 
 //
-// SCM‚Ö‚ÌƒCƒ“ƒXƒg[ƒ‹
+// SCMã¸ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
 //
 BOOL CWinService::Install()
 {
@@ -64,7 +64,7 @@ BOOL CWinService::Install()
 }
 
 //
-// SCM‚©‚çíœ
+// SCMã‹ã‚‰å‰Šé™¤
 //
 BOOL CWinService::Remove()
 {
@@ -99,7 +99,7 @@ BOOL CWinService::Remove()
 }
 
 //
-// ƒT[ƒrƒX‹N“®
+// ã‚µãƒ¼ãƒ“ã‚¹èµ·å‹•
 //
 BOOL CWinService::Start()
 {
@@ -161,7 +161,7 @@ BOOL CWinService::Start()
 }
 
 //
-// ƒT[ƒrƒX’â~
+// ã‚µãƒ¼ãƒ“ã‚¹åœæ­¢
 //
 BOOL CWinService::Stop()
 {
@@ -223,7 +223,7 @@ BOOL CWinService::Stop()
 }
 
 //
-// ƒT[ƒrƒXÄ‹N“®
+// ã‚µãƒ¼ãƒ“ã‚¹å†èµ·å‹•
 //
 BOOL CWinService::Restart()
 {
@@ -233,7 +233,7 @@ BOOL CWinService::Restart()
 }
 
 //
-// ƒT[ƒrƒXÀs
+// ã‚µãƒ¼ãƒ“ã‚¹å®Ÿè¡Œ
 //
 BOOL CWinService::Run(LPSERVICE_MAIN_FUNCTIONW lpServiceProc)
 {
@@ -242,16 +242,16 @@ BOOL CWinService::Run(LPSERVICE_MAIN_FUNCTIONW lpServiceProc)
 }
 
 //
-// ServiceMain‚©‚çƒT[ƒrƒXŠJn‘O‚ÉŒÄ‚Ño‚·
+// ServiceMainã‹ã‚‰ã‚µãƒ¼ãƒ“ã‚¹é–‹å§‹å‰ã«å‘¼ã³å‡ºã™
 //
 BOOL CWinService::RegisterService()
 {
-	// ƒT[ƒrƒX’â~—pƒCƒxƒ“ƒg‚ğì¬
+	// ã‚µãƒ¼ãƒ“ã‚¹åœæ­¢ç”¨ã‚¤ãƒ™ãƒ³ãƒˆã‚’ä½œæˆ
 	hServerStopEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL);
 	if (hServerStopEvent == NULL)
 		return FALSE;
 
-	// SCM‚©‚ç‚Ì§Œäƒnƒ“ƒhƒ‰‚ğ“o˜^
+	// SCMã‹ã‚‰ã®åˆ¶å¾¡ãƒãƒ³ãƒ‰ãƒ©ã‚’ç™»éŒ²
 	serviceStatusHandle = ::RegisterServiceCtrlHandlerEx(serviceName, ServiceCtrlHandler, NULL);
 	if (serviceStatusHandle == 0)
 	{
@@ -260,7 +260,7 @@ BOOL CWinService::RegisterService()
 		return FALSE;
 	}
 
-	// ó‘Ô‚ğŠJn’†‚Éİ’è
+	// çŠ¶æ…‹ã‚’é–‹å§‹ä¸­ã«è¨­å®š
 	serviceStatus.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
 	serviceStatus.dwCurrentState = SERVICE_START_PENDING;
 	serviceStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP;
@@ -274,38 +274,38 @@ BOOL CWinService::RegisterService()
 }
 
 //
-// ServiceMain‚©‚çƒT[ƒrƒXŠJnŒãŒÄo‚·(’â~—v‹‚Ü‚Åreturn‚µ‚È‚¢)
+// ServiceMainã‹ã‚‰ã‚µãƒ¼ãƒ“ã‚¹é–‹å§‹å¾Œå‘¼å‡ºã™(åœæ­¢è¦æ±‚ã¾ã§returnã—ãªã„)
 //
 void CWinService::ServiceRunning()
 {
-	// g‚¢•ûŠÔˆá‚Á‚Ä‚é(RegisterService()‚ğŒÄ‚ñ‚Å‚È‚¢)
+	// ä½¿ã„æ–¹é–“é•ã£ã¦ã‚‹(RegisterService()ã‚’å‘¼ã‚“ã§ãªã„)
 	if (hServerStopEvent == NULL)
 		return;
 
-	// ó‘Ô‚ğŠJn‚Éİ’è
+	// çŠ¶æ…‹ã‚’é–‹å§‹ã«è¨­å®š
 	serviceStatus.dwCurrentState = SERVICE_RUNNING;
 	serviceStatus.dwCheckPoint = 0;
 	serviceStatus.dwWaitHint = 0;
 	::SetServiceStatus(serviceStatusHandle, &serviceStatus);
 
-	// ƒT[ƒrƒX‚É’â~—v‹‚ª‘—‚ç‚ê‚Ä‚­‚é‚Ü‚Å‘Ò‹@
+	// ã‚µãƒ¼ãƒ“ã‚¹ã«åœæ­¢è¦æ±‚ãŒé€ã‚‰ã‚Œã¦ãã‚‹ã¾ã§å¾…æ©Ÿ
 	::WaitForSingleObject(hServerStopEvent, INFINITE);
 
 	return;
 }
 
 //
-// ServiceMain‚©‚çƒT[ƒrƒXI—¹ˆ—ŒãŒÄ‚Ño‚·
+// ServiceMainã‹ã‚‰ã‚µãƒ¼ãƒ“ã‚¹çµ‚äº†å‡¦ç†å¾Œå‘¼ã³å‡ºã™
 //
 void CWinService::ServiceStopped()
 {
 	if (hServerStopEvent)
 	{
-		//ƒCƒxƒ“ƒgƒNƒ[ƒY
+		//ã‚¤ãƒ™ãƒ³ãƒˆã‚¯ãƒ­ãƒ¼ã‚º
 		::CloseHandle(hServerStopEvent);
 		hServerStopEvent = NULL;
 
-		//ó‘Ô‚ğ’â~‚Éİ’è
+		//çŠ¶æ…‹ã‚’åœæ­¢ã«è¨­å®š
 		serviceStatus.dwCurrentState = SERVICE_STOPPED;
 		serviceStatus.dwCheckPoint = 0;
 		serviceStatus.dwWaitHint = 0;
@@ -315,7 +315,7 @@ void CWinService::ServiceStopped()
 }
 
 //
-// ƒT[ƒrƒXƒRƒ“ƒgƒ[ƒ‹ƒnƒ“ƒhƒ‰ˆ—
+// ã‚µãƒ¼ãƒ“ã‚¹ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ãƒãƒ³ãƒ‰ãƒ©å‡¦ç†
 //
 DWORD WINAPI CWinService::ServiceCtrlHandler(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext)
 {
@@ -330,7 +330,7 @@ DWORD WINAPI CWinService::ServiceCtrlHandler(DWORD dwControl, DWORD dwEventType,
 			serviceStatus.dwCheckPoint = 0;
 			serviceStatus.dwWaitHint = 30000;
 			::SetServiceStatus(serviceStatusHandle, &serviceStatus);
-			// ’â~ƒCƒxƒ“ƒg‚ğƒgƒŠƒK
+			// åœæ­¢ã‚¤ãƒ™ãƒ³ãƒˆã‚’ãƒˆãƒªã‚¬
 			::SetEvent(hServerStopEvent);
 		}
 		break;

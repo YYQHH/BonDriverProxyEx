@@ -1,4 +1,4 @@
-#include <locale.h>
+ï»¿#include <locale.h>
 #include "CWinService.cpp"
 
 static void WINAPI ServiceMain(DWORD argc, LPTSTR *argv)
@@ -25,11 +25,11 @@ static void WINAPI ServiceMain(DWORD argc, LPTSTR *argv)
 		if (g_hListenThread)
 		{
 			lpCWinService->ServiceRunning();
-			ShutdownInstances();	// g_hListenThread‚Í‚±‚Ì’†‚ÅCloseHandle()‚³‚ê‚é
+			ShutdownInstances();	// g_hListenThreadã¯ã“ã®ä¸­ã§CloseHandle()ã•ã‚Œã‚‹
 		}
 		else
 			delete phi;
-		CleanUp();	// ShutdownInstances()‚ÅDriversMap‚ÉƒAƒNƒZƒX‚·‚éƒXƒŒƒbƒh‚Í–³‚­‚È‚Á‚Ä‚¢‚é‚Í‚¸
+		CleanUp();	// ShutdownInstances()ã§DriversMapã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰ã¯ç„¡ããªã£ã¦ã„ã‚‹ã¯ãš
 	} while (0);
 
 	if (bWinsockInit)
@@ -90,7 +90,7 @@ int _tmain(int argc, _TCHAR *argv[], _TCHAR *envp[])
 	{
 		if (argc == 1)
 		{
-			// ˆø”‚È‚µ‚Å‹N“®‚³‚ê‚½
+			// å¼•æ•°ãªã—ã§èµ·å‹•ã•ã‚ŒãŸ
 #if _DEBUG
 			TCHAR szDrive[4];
 			TCHAR szPath[MAX_PATH];
@@ -108,37 +108,37 @@ int _tmain(int argc, _TCHAR *argv[], _TCHAR *envp[])
 #endif
 			if (lpCWinService->Run(ServiceMain))
 			{
-				// ƒT[ƒrƒX‚¾‚Á‚½
+				// ã‚µãƒ¼ãƒ“ã‚¹ã ã£ãŸ
 				break;
 			}
 			else
 			{
-				// ƒT[ƒrƒX‚Å‚Í‚È‚¢
-				_tprintf(_T("ƒRƒ“ƒ\[ƒ‹ƒ‚[ƒh‚ÅŠJn‚µ‚Ü‚·...Ctrl+C‚ÅI—¹\n"));
+				// ã‚µãƒ¼ãƒ“ã‚¹ã§ã¯ãªã„
+				_tprintf(_T("ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ãƒ¢ãƒ¼ãƒ‰ã§é–‹å§‹ã—ã¾ã™...Ctrl+Cã§çµ‚äº†\n"));
 				SetConsoleCtrlHandler(HandlerRoutine, TRUE);
 				ret = RunOnCmd(GetModuleHandle(NULL));
 				switch (ret)
 				{
 				case -1:
-					_tprintf(_T("iniƒtƒ@ƒCƒ‹‚Ì“Ç‚É¸”s‚µ‚Ü‚µ‚½\n"));
+					_tprintf(_T("iniãƒ•ã‚¡ã‚¤ãƒ«ã®èª­è¾¼ã«å¤±æ•—ã—ã¾ã—ãŸ\n"));
 					break;
 				case -2:
-					_tprintf(_T("winsock‚Ì‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½\n"));
+					_tprintf(_T("winsockã®åˆæœŸåŒ–ã«å¤±æ•—ã—ã¾ã—ãŸ\n"));
 					break;
 				case 1:
-					_tprintf(_T("HostƒAƒhƒŒƒX‚Ì‰ğŒˆ‚É¸”s‚µ‚Ü‚µ‚½\n"));
+					_tprintf(_T("Hostã‚¢ãƒ‰ãƒ¬ã‚¹ã®è§£æ±ºã«å¤±æ•—ã—ã¾ã—ãŸ\n"));
 					break;
 				case 2:
-					_tprintf(_T("bind()‚É¸”s‚µ‚Ü‚µ‚½\n"));
+					_tprintf(_T("bind()ã«å¤±æ•—ã—ã¾ã—ãŸ\n"));
 					break;
 				case 3:
-					_tprintf(_T("listen()‚É¸”s‚µ‚Ü‚µ‚½\n"));
+					_tprintf(_T("listen()ã«å¤±æ•—ã—ã¾ã—ãŸ\n"));
 					break;
 				case 4:
-					_tprintf(_T("accept()’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½\n"));
+					_tprintf(_T("accept()ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ\n"));
 					break;
 				case 0:
-					_tprintf(_T("I—¹‚µ‚Ü‚·\n"));
+					_tprintf(_T("çµ‚äº†ã—ã¾ã™\n"));
 					break;
 				}
 				break;
@@ -146,52 +146,52 @@ int _tmain(int argc, _TCHAR *argv[], _TCHAR *envp[])
 		}
 		else
 		{
-			// ˆø”‚ ‚è
+			// å¼•æ•°ã‚ã‚Š
 			BOOL done = FALSE;
 			for (int i = 1; i < argc; i++)
 			{
 				if (_tcscmp(argv[i], _T("install")) == 0)
 				{
 					if (lpCWinService->Install())
-						_tprintf(_T("WindowsƒT[ƒrƒX‚Æ‚µ‚Ä“o˜^‚µ‚Ü‚µ‚½\n"));
+						_tprintf(_T("Windowsã‚µãƒ¼ãƒ“ã‚¹ã¨ã—ã¦ç™»éŒ²ã—ã¾ã—ãŸ\n"));
 					else
-						_tprintf(_T("WindowsƒT[ƒrƒX‚Æ‚µ‚Ä‚Ì“o˜^‚É¸”s‚µ‚Ü‚µ‚½\n"));
+						_tprintf(_T("Windowsã‚µãƒ¼ãƒ“ã‚¹ã¨ã—ã¦ã®ç™»éŒ²ã«å¤±æ•—ã—ã¾ã—ãŸ\n"));
 					done = TRUE;
 					break;
 				}
 				else if (_tcscmp(argv[i], _T("remove")) == 0)
 				{
 					if (lpCWinService->Remove())
-						_tprintf(_T("WindowsƒT[ƒrƒX‚©‚çíœ‚µ‚Ü‚µ‚½\n"));
+						_tprintf(_T("Windowsã‚µãƒ¼ãƒ“ã‚¹ã‹ã‚‰å‰Šé™¤ã—ã¾ã—ãŸ\n"));
 					else
-						_tprintf(_T("WindowsƒT[ƒrƒX‚©‚ç‚Ìíœ‚É¸”s‚µ‚Ü‚µ‚½\n"));
+						_tprintf(_T("Windowsã‚µãƒ¼ãƒ“ã‚¹ã‹ã‚‰ã®å‰Šé™¤ã«å¤±æ•—ã—ã¾ã—ãŸ\n"));
 					done = TRUE;
 					break;
 				}
 				else if (_tcscmp(argv[i], _T("start")) == 0)
 				{
 					if (lpCWinService->Start())
-						_tprintf(_T("WindowsƒT[ƒrƒX‚ğ‹N“®‚µ‚Ü‚µ‚½\n"));
+						_tprintf(_T("Windowsã‚µãƒ¼ãƒ“ã‚¹ã‚’èµ·å‹•ã—ã¾ã—ãŸ\n"));
 					else
-						_tprintf(_T("WindowsƒT[ƒrƒX‚Ì‹N“®‚É¸”s‚µ‚Ü‚µ‚½\n"));
+						_tprintf(_T("Windowsã‚µãƒ¼ãƒ“ã‚¹ã®èµ·å‹•ã«å¤±æ•—ã—ã¾ã—ãŸ\n"));
 					done = TRUE;
 					break;
 				}
 				else if (_tcscmp(argv[i], _T("stop")) == 0)
 				{
 					if (lpCWinService->Stop())
-						_tprintf(_T("WindowsƒT[ƒrƒX‚ğ’â~‚µ‚Ü‚µ‚½\n"));
+						_tprintf(_T("Windowsã‚µãƒ¼ãƒ“ã‚¹ã‚’åœæ­¢ã—ã¾ã—ãŸ\n"));
 					else
-						_tprintf(_T("WindowsƒT[ƒrƒX‚Ì’â~‚É¸”s‚µ‚Ü‚µ‚½\n"));
+						_tprintf(_T("Windowsã‚µãƒ¼ãƒ“ã‚¹ã®åœæ­¢ã«å¤±æ•—ã—ã¾ã—ãŸ\n"));
 					done = TRUE;
 					break;
 				}
 				else if (_tcscmp(argv[i], _T("restart")) == 0)
 				{
 					if (lpCWinService->Restart())
-						_tprintf(_T("WindowsƒT[ƒrƒX‚ğÄ‹N“®‚µ‚Ü‚µ‚½\n"));
+						_tprintf(_T("Windowsã‚µãƒ¼ãƒ“ã‚¹ã‚’å†èµ·å‹•ã—ã¾ã—ãŸ\n"));
 					else
-						_tprintf(_T("WindowsƒT[ƒrƒX‚ÌÄ‹N“®‚É¸”s‚µ‚Ü‚µ‚½\n"));
+						_tprintf(_T("Windowsã‚µãƒ¼ãƒ“ã‚¹ã®å†èµ·å‹•ã«å¤±æ•—ã—ã¾ã—ãŸ\n"));
 					done = TRUE;
 					break;
 				}
@@ -199,16 +199,16 @@ int _tmain(int argc, _TCHAR *argv[], _TCHAR *envp[])
 			if (done)
 				break;
 		}
-		// Usage•\¦
+		// Usageè¡¨ç¤º
 		_tprintf(_T("Usage: %s <command>\n")
-			_T("ƒRƒ}ƒ“ƒh\n")
-			_T("  install    WindowsƒT[ƒrƒX‚Æ‚µ‚Ä“o˜^‚µ‚Ü‚·\n")
-			_T("  remove     WindowsƒT[ƒrƒX‚©‚çíœ‚µ‚Ü‚·\n")
-			_T("  start      WindowsƒT[ƒrƒX‚ğ‹N“®‚µ‚Ü‚·\n")
-			_T("  stop       WindowsƒT[ƒrƒX‚ğ’â~‚µ‚Ü‚·\n")
-			_T("  restart    WindowsƒT[ƒrƒX‚ğÄ‹N“®‚µ‚Ü‚·\n")
+			_T("ã‚³ãƒãƒ³ãƒ‰\n")
+			_T("  install    Windowsã‚µãƒ¼ãƒ“ã‚¹ã¨ã—ã¦ç™»éŒ²ã—ã¾ã™\n")
+			_T("  remove     Windowsã‚µãƒ¼ãƒ“ã‚¹ã‹ã‚‰å‰Šé™¤ã—ã¾ã™\n")
+			_T("  start      Windowsã‚µãƒ¼ãƒ“ã‚¹ã‚’èµ·å‹•ã—ã¾ã™\n")
+			_T("  stop       Windowsã‚µãƒ¼ãƒ“ã‚¹ã‚’åœæ­¢ã—ã¾ã™\n")
+			_T("  restart    Windowsã‚µãƒ¼ãƒ“ã‚¹ã‚’å†èµ·å‹•ã—ã¾ã™\n")
 			_T("\n")
-			_T("ˆø”‚È‚µ‚Å‹N“®‚³‚ê‚½ê‡AƒRƒ“ƒ\[ƒ‹ƒ‚[ƒh‚Å“®ì‚µ‚Ü‚·\n"),
+			_T("å¼•æ•°ãªã—ã§èµ·å‹•ã•ã‚ŒãŸå ´åˆã€ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ãƒ¢ãƒ¼ãƒ‰ã§å‹•ä½œã—ã¾ã™\n"),
 			argv[0]);
 	} while (0);
 
