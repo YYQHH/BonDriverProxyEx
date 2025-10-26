@@ -1,6 +1,9 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include "BonDriverProxyEx.h"
 
+#include <string>
+#include <vector>
+
 #if _DEBUG
 #define DETAILLOG	0
 #define DETAILLOG2	1
@@ -26,16 +29,172 @@ using B25Decoder = B25DecoderAdapter;
 #endif // USE_B25_DECODER_DLL
 
 static int g_b25_enable;
+static BOOL g_EnableAccessLog;
+static char g_AccessLogPath[MAX_PATH];
+static cCriticalSection g_LogLock;
+
+static void InvalidateInformationWindow()
+{
+#ifdef HAVE_UI
+	if (g_hWnd)
+		::InvalidateRect(g_hWnd, NULL, TRUE);
+#endif
+}
+
+static void AppendAccessLog(const char *text)
+{
+    if (!g_EnableAccessLog || g_AccessLogPath[0] == '\0' || !text || !text[0]) return;
+
+    LOCK(g_LogLock);
+    HANDLE hFile = ::CreateFileA(g_AccessLogPath, GENERIC_WRITE, FILE_SHARE_READ,
+                                 NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hFile == INVALID_HANDLE_VALUE) return;
+
+    LARGE_INTEGER liSize;
+    if (!::GetFileSizeEx(hFile, &liSize)) liSize.QuadPart = 0;
+    if (liSize.QuadPart == 0) {
+        DWORD written;
+        const BYTE bom[] = { 0xEF, 0xBB, 0xBF };
+        ::WriteFile(hFile, bom, sizeof(bom), &written, NULL);
+    }
+
+    ::SetFilePointer(hFile, 0, NULL, FILE_END);
+
+    // 1) 先把 ACP 窄串 -> UTF-16
+    int wlen = ::MultiByteToWideChar(CP_ACP, 0, text, -1, NULL, 0);
+    std::wstring wmsg(wlen ? wlen - 1 : 0, L'\0');
+    if (wlen > 1) ::MultiByteToWideChar(CP_ACP, 0, text, -1, &wmsg[0], wlen);
+
+    // 2) 规范化行尾：确保 CRLF
+    if (wmsg.empty() || wmsg.back() != L'\n') wmsg.append(L"\r\n");
+
+    // 3) 再 UTF-16 -> UTF-8
+    int u8len = ::WideCharToMultiByte(CP_UTF8, 0, wmsg.c_str(), (int)wmsg.size(),
+                                      NULL, 0, NULL, NULL);
+    std::string u8(u8len, '\0');
+    if (u8len > 0)
+        ::WideCharToMultiByte(CP_UTF8, 0, wmsg.c_str(), (int)wmsg.size(),
+                              &u8[0], u8len, NULL, NULL);
+
+    DWORD written;
+    ::WriteFile(hFile, u8.data(), (DWORD)u8.size(), &written, NULL);
+    ::CloseHandle(hFile);
+}
+
+
+static void CollectInstanceInfo(std::vector<std::string> &lines)
+{
+	union {
+		SOCKADDR_STORAGE ss;
+		SOCKADDR_IN si4;
+		SOCKADDR_IN6 si6;
+	};
+	char addr[INET6_ADDRSTRLEN];
+	int port, len, num = 0;
+	char buf[2048];
+
+	LOCK(g_Lock);
+	for (auto pInstance : g_InstanceList)
+	{
+		len = sizeof(ss);
+		if (getpeername(pInstance->m_s, (SOCKADDR *)&ss, &len) == 0)
+		{
+			if (ss.ss_family == AF_INET)
+			{
+				inet_ntop(AF_INET, &(si4.sin_addr), addr, sizeof(addr));
+				port = ntohs(si4.sin_port);
+			}
+			else
+			{
+				inet_ntop(AF_INET6, &(si6.sin6_addr), addr, sizeof(addr));
+				port = ntohs(si6.sin6_port);
+			}
+		}
+		else
+		{
+			lstrcpyA(addr, "unknown host...");
+			port = 0;
+		}
+		std::vector<stDriver> &vstDriver = DriversMap.at(pInstance->m_pDriversMapKey);
+		wsprintfA(buf, "%02d: [%s]:[%d] / [%s][%s] / space[%u] ch[%u]", num, addr, port, pInstance->m_pDriversMapKey, vstDriver[pInstance->m_iDriverNo].strBonDriver, pInstance->m_dwSpace, pInstance->m_dwChannel);
+		lines.emplace_back(buf);
+		++num;
+	}
+}
+
+static void WriteAccessLogCurrentInfo()
+{
+	if (!g_EnableAccessLog || g_AccessLogPath[0] == '\0')
+		return;
+
+	std::vector<std::string> lines;
+	CollectInstanceInfo(lines);
+	if (lines.empty())
+		return;
+
+	SYSTEMTIME stNow;
+	::GetLocalTime(&stNow);
+	char timeBuf[32];
+	wsprintfA(timeBuf, "%04d/%02d/%02d %02d:%02d:%02d", stNow.wYear, stNow.wMonth, stNow.wDay, stNow.wHour, stNow.wMinute, stNow.wSecond);
+
+	for (auto &line : lines)
+	{
+		char message[2560];
+		wsprintfA(message, "[%s] %s", timeBuf, line.c_str());
+		AppendAccessLog(message);
+	}
+}
+
+static void WriteAccessLogDisconnect(const char *addr)
+{
+	if (!g_EnableAccessLog || g_AccessLogPath[0] == '\0')
+		return;
+
+	const char *target = (addr != NULL && addr[0] != '\0') ? addr : "unknown host...";
+	SYSTEMTIME stNow;
+	::GetLocalTime(&stNow);
+	char timeBuf[32];
+	wsprintfA(timeBuf, "%04d/%02d/%02d %02d:%02d:%02d", stNow.wYear, stNow.wMonth, stNow.wDay, stNow.wHour, stNow.wMinute, stNow.wSecond);
+	char message[512];
+	wsprintfA(message, "[%s] (%s)からの接続は切断されました", timeBuf, target);
+	AppendAccessLog(message);
+}
+
+static void InformationUpdated()
+{
+	InvalidateInformationWindow();
+	WriteAccessLogCurrentInfo();
+}
 
 static int Init(HMODULE hModule)
 {
+	char szModulePath[MAX_PATH + 16] = { '\0' };
+	GetModuleFileNameA(hModule, szModulePath, MAX_PATH);
 	char szIniPath[MAX_PATH + 16] = { '\0' };
-	GetModuleFileNameA(hModule, szIniPath, MAX_PATH);
+	lstrcpynA(szIniPath, szModulePath, sizeof(szIniPath));
 	char *p = strrchr(szIniPath, '.');
 	if (!p)
 		return -1;
 	p++;
 	strcpy(p, "ini");
+	
+	lstrcpynA(g_AccessLogPath, szModulePath, sizeof(g_AccessLogPath));
+	char *pSlash = strrchr(g_AccessLogPath, '\\');
+	char *pSlash2 = strrchr(g_AccessLogPath, '/');
+	char *pDir = pSlash;
+	if ((pSlash2 != NULL) && ((pSlash == NULL) || (pSlash2 > pSlash)))
+		pDir = pSlash2;
+	if (pDir)
+	{
+		*(pDir + 1) = '\0';
+		size_t len = strlen(g_AccessLogPath);
+		if (len + 11 <= sizeof(g_AccessLogPath))
+			strcat(g_AccessLogPath, "access.log");
+		else
+			g_AccessLogPath[0] = '\0';
+	}
+	else
+		g_AccessLogPath[0] = '\0';
 
 	HANDLE hFile = CreateFileA(szIniPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -47,6 +206,7 @@ static int Init(HMODULE hModule)
 	g_OpenTunerRetDelay = GetPrivateProfileIntA("OPTION", "OPENTUNER_RETURN_DELAY", 0, szIniPath);
 	g_SandBoxedRelease = GetPrivateProfileIntA("OPTION", "SANDBOXED_RELEASE", 0, szIniPath);
 	g_DisableUnloadBonDriver = GetPrivateProfileIntA("OPTION", "DISABLE_UNLOAD_BONDRIVER", 0, szIniPath);
+	g_EnableAccessLog = (GetPrivateProfileIntA("OPTION", "ACCESS_LOG", 0, szIniPath) != 0) && (g_AccessLogPath[0] != '\0');
 	g_b25_enable = GetPrivateProfileIntA("OPTION", "B25", 0, szIniPath);
 	if (g_b25_enable)
 	{
@@ -294,6 +454,8 @@ cProxyServerEx::cProxyServerEx() : m_Error(TRUE, FALSE)
 	m_dwSpace = m_dwChannel = 0x7fffffff;	// INT_MAX
 	m_pDriversMapKey = NULL;
 	m_iDriverNo = -1;
+	m_iRemotePort = 0;
+	m_szRemoteAddr[0] = '\0';
 	m_iDriverUseOrder = 0;
 	m_fifoSend.SetAbortEvent(m_Error);
 	m_fifoRecv.SetAbortEvent(m_Error);
@@ -301,20 +463,30 @@ cProxyServerEx::cProxyServerEx() : m_Error(TRUE, FALSE)
 
 cProxyServerEx::~cProxyServerEx()
 {
-	LOCK(g_Lock);
 	BOOL bRelease = TRUE;
-	std::list<cProxyServerEx *>::iterator it = g_InstanceList.begin();
-	while (it != g_InstanceList.end())
+	bool bRemoved = false;
 	{
-		if (*it == this)
-			g_InstanceList.erase(it++);
-		else
+		LOCK(g_Lock);
+		std::list<cProxyServerEx *>::iterator it = g_InstanceList.begin();
+		while (it != g_InstanceList.end())
 		{
-			if ((m_hModule != NULL) && (m_hModule == (*it)->m_hModule))
-				bRelease = FALSE;
-			++it;
+			if (*it == this)
+			{
+				g_InstanceList.erase(it++);
+				bRemoved = true;
+			}
+			else
+			{
+				if ((m_hModule != NULL) && (m_hModule == (*it)->m_hModule))
+					bRelease = FALSE;
+				++it;
+			}
 		}
 	}
+	
+	if (bRemoved)
+		WriteAccessLogDisconnect(m_szRemoteAddr);
+	
 	if (bRelease)
 	{
 		if (m_hTsRead)
@@ -345,6 +517,9 @@ cProxyServerEx::~cProxyServerEx()
 	}
 	if (m_s != INVALID_SOCKET)
 		::closesocket(m_s);
+
+	if (bRemoved)
+		InformationUpdated();
 }
 
 DWORD WINAPI cProxyServerEx::Reception(LPVOID pv)
@@ -361,7 +536,7 @@ DWORD WINAPI cProxyServerEx::Reception(LPVOID pv)
 	delete pProxy;
 
 #ifdef HAVE_UI
-	::InvalidateRect(g_hWnd, NULL, TRUE);
+	InvalidateInformationWindow();
 #endif
 
 	if (es != NULL)
@@ -401,12 +576,14 @@ DWORD cProxyServerEx::Process()
 
 		case WAIT_OBJECT_0 + 1:
 		{
-			// コマンド処理の全体をロックするので、BonDriver_Proxyをロードして自分自身に
-			// 接続させるとデッドロックする
-			// しかしそうしなければ困る状況と言うのは多分無いと思うので、これは仕様と言う事で
-			LOCK(g_Lock);
-			cPacketHolder *pPh;
-			m_fifoRecv.Pop(&pPh);
+			bool bInfoUpdate = false;
+			{
+				// コマンド処理の全体をロックするので、BonDriver_Proxyをロードして自分自身に
+				// 接続させるとデッドロックする
+				// しかしそうしなければ困る状況と言うのは多分無いと思うので、これは仕様と言う事で
+				LOCK(g_Lock);
+				cPacketHolder *pPh;
+				m_fifoRecv.Pop(&pPh);
 #if _DEBUG && DETAILLOG2
 			{
 				char *CommandName[]={
@@ -467,7 +644,10 @@ DWORD cProxyServerEx::Process()
 					}
 					BOOL b = SelectBonDriver((LPCSTR)(pPh->m_pPacket->payload), 0);
 					if (b)
+					{
 						g_InstanceList.push_back(this);
+						bInfoUpdate = true;
+					}
 					makePacket(eSelectBonDriver, b);
 				}
 				break;
@@ -1064,9 +1244,7 @@ DWORD cProxyServerEx::Process()
 								makePacket(eSetChannel2, (DWORD)0xff);
 						}
 					}
-#ifdef HAVE_UI
-					::InvalidateRect(g_hWnd, NULL, TRUE);
-#endif
+					bInfoUpdate = true;
 				}
 				break;
 			}
@@ -1172,8 +1350,11 @@ DWORD cProxyServerEx::Process()
 				break;
 			}
 			delete pPh;
-			break;
 		}
+		if (bInfoUpdate)
+			InformationUpdated();
+		break;
+	}
 
 		case WAIT_OBJECT_0 + 2:
 			// 終了要求

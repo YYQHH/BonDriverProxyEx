@@ -105,10 +105,12 @@ class cProxyServerEx {
 public:
 #endif
 	SOCKET m_s;
-	DWORD m_dwSpace;
-	DWORD m_dwChannel;
-	char *m_pDriversMapKey;
-	int m_iDriverNo;
+        DWORD m_dwSpace;
+        DWORD m_dwChannel;
+        char *m_pDriversMapKey;
+        int m_iDriverNo;
+        int m_iRemotePort;
+        char m_szRemoteAddr[INET6_ADDRSTRLEN];
 #ifdef HAVE_UI
 private:
 #endif
@@ -156,10 +158,38 @@ private:
 	const BOOL SetLnbPower(const BOOL bEnable);
 
 public:
-	cProxyServerEx();
-	~cProxyServerEx();
-	void setSocket(SOCKET s){ m_s = s; }
-	static DWORD WINAPI Reception(LPVOID pv);
+        cProxyServerEx();
+        ~cProxyServerEx();
+        void setSocket(SOCKET s)
+        {
+                m_s = s;
+                m_iRemotePort = 0;
+                m_szRemoteAddr[0] = '\0';
+                union {
+                        SOCKADDR_STORAGE ss;
+                        SOCKADDR_IN si4;
+                        SOCKADDR_IN6 si6;
+                } addr;
+                int len = sizeof(addr.ss);
+                if (getpeername(s, (SOCKADDR *)&addr.ss, &len) == 0)
+                {
+                        if (addr.ss.ss_family == AF_INET)
+                        {
+                                inet_ntop(AF_INET, &(addr.si4.sin_addr), m_szRemoteAddr, sizeof(m_szRemoteAddr));
+                                m_iRemotePort = ntohs(addr.si4.sin_port);
+                        }
+                        else
+                        {
+                                inet_ntop(AF_INET6, &(addr.si6.sin6_addr), m_szRemoteAddr, sizeof(m_szRemoteAddr));
+                                m_iRemotePort = ntohs(addr.si6.sin6_port);
+                        }
+                }
+                else
+                {
+                        lstrcpyA(m_szRemoteAddr, "unknown host...");
+                }
+        }
+        static DWORD WINAPI Reception(LPVOID pv);
 };
 
 static std::list<cProxyServerEx *> g_InstanceList;
